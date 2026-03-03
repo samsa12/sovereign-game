@@ -1,0 +1,1520 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SOVEREIGN — Game Guide</title>
+    <meta name="description"
+        content="Complete guide to playing SOVEREIGN, the multiplayer geopolitical strategy game. Learn about economy, military, diplomacy, and more.">
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <style>
+        /* ═══ Design Tokens (from main game) ═══ */
+        :root {
+            --bg-primary: #0a0a0c;
+            --bg-secondary: #0f1115;
+            --bg-tertiary: #171a21;
+            --bg-card: rgba(15, 17, 21, 0.95);
+            --border-color: #2a2f3a;
+            --border-glow: rgba(220, 165, 75, 0.15);
+            --text-primary: #d1d5db;
+            --text-secondary: #8b92a5;
+            --text-muted: #5e6475;
+            --text-heading: #eef0f4;
+            --accent-blue: #4f7cac;
+            --accent-blue-glow: rgba(79, 124, 172, 0.3);
+            --accent-cyan: #52a8a2;
+            --accent-emerald: #5b8c5a;
+            --accent-amber: #dca54b;
+            --accent-red: #b84a4a;
+            --accent-purple: #7d6b91;
+            --glass-bg: rgba(15, 17, 21, 0.85);
+            --glass-border: #2a2f3a;
+            --glass-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+            --font-main: 'JetBrains Mono', 'Fira Code', monospace;
+            --font-display: 'Orbitron', monospace;
+            --radius-sm: 6px;
+            --radius-md: 10px;
+            --radius-lg: 16px;
+        }
+
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            font-size: 14px;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.7;
+            min-height: 100vh;
+            background-image:
+                radial-gradient(ellipse at 15% 10%, rgba(79, 124, 172, 0.06) 0%, transparent 50%),
+                radial-gradient(ellipse at 85% 90%, rgba(125, 107, 145, 0.05) 0%, transparent 50%);
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--bg-tertiary);
+            border-radius: 3px;
+        }
+
+        a {
+            color: var(--accent-blue);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        a:hover {
+            color: var(--accent-cyan);
+        }
+
+        /* ═══ Header ═══ */
+        .guide-header {
+            text-align: center;
+            padding: 4rem 2rem 3rem;
+            background: linear-gradient(180deg, rgba(79, 124, 172, 0.08) 0%, transparent 100%);
+            border-bottom: 1px solid var(--border-color);
+            position: relative;
+        }
+
+        .guide-header::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 20%;
+            right: 20%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--accent-blue), transparent);
+        }
+
+        .guide-logo {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+            filter: drop-shadow(0 0 20px rgba(79, 124, 172, 0.4));
+        }
+
+        .guide-title {
+            font-family: var(--font-display);
+            font-size: 2.4rem;
+            font-weight: 900;
+            letter-spacing: 8px;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .guide-subtitle {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 1.5rem;
+            padding: 8px 20px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            transition: all 0.25s;
+        }
+
+        .back-link:hover {
+            border-color: var(--accent-blue);
+            color: var(--text-primary);
+        }
+
+        /* ═══ Layout ═══ */
+        .guide-layout {
+            display: flex;
+            max-width: 1200px;
+            margin: 0 auto;
+            gap: 0;
+        }
+
+        /* ═══ Sidebar Navigation ═══ */
+        .guide-nav {
+            width: 260px;
+            min-width: 260px;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+            padding: 2rem 1.5rem;
+            border-right: 1px solid var(--border-color);
+            background: var(--bg-secondary);
+        }
+
+        .nav-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+        }
+
+        .nav-list {
+            list-style: none;
+        }
+
+        .nav-list li {
+            margin-bottom: 2px;
+        }
+
+        .nav-list a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 12px;
+            border-radius: var(--radius-sm);
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .nav-list a:hover {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+
+        .nav-list a.active {
+            background: rgba(79, 124, 172, 0.12);
+            color: var(--accent-blue);
+            border-left: 2px solid var(--accent-blue);
+        }
+
+        .nav-icon {
+            font-size: 1.1rem;
+            width: 24px;
+            text-align: center;
+        }
+
+        /* ═══ Content ═══ */
+        .guide-content {
+            flex: 1;
+            padding: 2.5rem 3rem;
+            max-width: 900px;
+            overflow-y: auto;
+        }
+
+        /* Sections */
+        .guide-section {
+            margin-bottom: 4rem;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .section-icon {
+            font-size: 2rem;
+        }
+
+        .section-title {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: var(--text-heading);
+        }
+
+        h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-heading);
+            margin: 2rem 0 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        h3::before {
+            content: '▸';
+            color: var(--accent-amber);
+            font-size: 0.9rem;
+        }
+
+        p {
+            margin-bottom: 1rem;
+            color: var(--text-secondary);
+        }
+
+        /* Info cards */
+        .info-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-md);
+            padding: 1.2rem 1.5rem;
+            margin: 1rem 0;
+            box-shadow: var(--glass-shadow);
+        }
+
+        .info-card.tip {
+            border-left: 3px solid var(--accent-emerald);
+        }
+
+        .info-card.warning {
+            border-left: 3px solid var(--accent-amber);
+        }
+
+        .info-card.danger {
+            border-left: 3px solid var(--accent-red);
+        }
+
+        .info-card strong {
+            color: var(--text-heading);
+        }
+
+        /* Tables */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0 1.5rem;
+            font-size: 0.85rem;
+        }
+
+        .data-table thead {
+            background: var(--bg-tertiary);
+        }
+
+        .data-table th {
+            padding: 10px 14px;
+            text-align: left;
+            font-weight: 700;
+            font-size: 0.75rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .data-table td {
+            padding: 10px 14px;
+            border-bottom: 1px solid rgba(42, 47, 58, 0.5);
+            color: var(--text-secondary);
+        }
+
+        .data-table tbody tr:hover {
+            background: rgba(79, 124, 172, 0.04);
+        }
+
+        .data-table .icon-col {
+            font-size: 1.2rem;
+            text-align: center;
+            width: 40px;
+        }
+
+        .stat-pos {
+            color: var(--accent-emerald);
+            font-weight: 600;
+        }
+
+        .stat-neg {
+            color: var(--accent-red);
+            font-weight: 600;
+        }
+
+        .stat-neutral {
+            color: var(--accent-amber);
+            font-weight: 600;
+        }
+
+        /* Tags */
+        .tag {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .tag-army {
+            background: rgba(91, 140, 90, 0.2);
+            color: var(--accent-emerald);
+        }
+
+        .tag-navy {
+            background: rgba(79, 124, 172, 0.2);
+            color: var(--accent-blue);
+        }
+
+        .tag-air {
+            background: rgba(82, 168, 162, 0.2);
+            color: var(--accent-cyan);
+        }
+
+        .tag-strategic {
+            background: rgba(184, 74, 74, 0.2);
+            color: var(--accent-red);
+        }
+
+        .tag-power {
+            background: rgba(220, 165, 75, 0.15);
+            color: var(--accent-amber);
+        }
+
+        .tag-resource {
+            background: rgba(91, 140, 90, 0.15);
+            color: var(--accent-emerald);
+        }
+
+        .tag-commerce {
+            background: rgba(79, 124, 172, 0.15);
+            color: var(--accent-blue);
+        }
+
+        .tag-civil {
+            background: rgba(125, 107, 145, 0.15);
+            color: var(--accent-purple);
+        }
+
+        .tag-military {
+            background: rgba(184, 74, 74, 0.15);
+            color: var(--accent-red);
+        }
+
+        /* Stat grid */
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .stat-card {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 1rem 1.2rem;
+            text-align: center;
+        }
+
+        .stat-card .stat-icon {
+            font-size: 1.5rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .stat-card .stat-name {
+            font-weight: 700;
+            color: var(--text-heading);
+            font-size: 0.9rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .stat-card .stat-desc {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+        }
+
+        /* Footer */
+        .guide-footer {
+            text-align: center;
+            padding: 2rem;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .guide-nav {
+                display: none;
+            }
+
+            .guide-content {
+                padding: 2rem 1.5rem;
+            }
+
+            .guide-title {
+                font-size: 1.6rem;
+                letter-spacing: 4px;
+            }
+
+            .stat-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ═══ Header ═══ -->
+    <header class="guide-header">
+        <div class="guide-logo">🌐</div>
+        <h1 class="guide-title">SOVEREIGN</h1>
+        <p class="guide-subtitle">Complete Game Guide</p>
+        <a href="/" class="back-link">← Back to Game</a>
+    </header>
+
+    <div class="guide-layout">
+
+        <!-- ═══ Sidebar Nav ═══ -->
+        <nav class="guide-nav">
+            <div class="nav-label">Sections</div>
+            <ul class="nav-list">
+                <li><a href="#getting-started"><span class="nav-icon">🚀</span> Getting Started</a></li>
+                <li><a href="#economy"><span class="nav-icon">💰</span> Economy</a></li>
+                <li><a href="#politics"><span class="nav-icon">🏛️</span> Politics & Government</a></li>
+                <li><a href="#military"><span class="nav-icon">⚔️</span> Military</a></li>
+                <li><a href="#diplomacy"><span class="nav-icon">🤝</span> Diplomacy</a></li>
+                <li><a href="#messaging"><span class="nav-icon">✉️</span> Messaging</a></li>
+                <li><a href="#espionage"><span class="nav-icon">🕵️</span> Espionage</a></li>
+                <li><a href="#world"><span class="nav-icon">🌍</span> World & Rankings</a></li>
+                <li><a href="#customization"><span class="nav-icon">🎨</span> Nation Customization</a></li>
+            </ul>
+        </nav>
+
+        <!-- ═══ Main Content ═══ -->
+        <main class="guide-content">
+
+            <!-- ──────────── GETTING STARTED ──────────── -->
+            <section id="getting-started" class="guide-section">
+                <div class="section-header">
+                    <span class="section-icon">🚀</span>
+                    <h2 class="section-title">Getting Started</h2>
+                </div>
+
+                <p>Welcome to <strong>SOVEREIGN</strong>, a real-time multiplayer geopolitical strategy game. You lead a
+                    nation, manage its economy, build a military, forge alliances, and compete on the world stage.</p>
+
+                <h3>Creating Your Account</h3>
+                <p>Register with a username, email, and password. You'll receive a 6-digit verification PIN via email
+                    (or on-screen if email isn't configured). Enter the PIN to verify your account.</p>
+
+                <h3>Founding Your Nation</h3>
+                <p>After registration, create your nation by choosing:</p>
+                <ul style="color: var(--text-secondary); margin: 0.5rem 0 1.5rem 1.5rem;">
+                    <li><strong>Nation Name</strong> — A unique name (3-50 characters)</li>
+                    <li><strong>Leader Name</strong> — Your title and name</li>
+                    <li><strong>Government Type</strong> — Each has unique bonuses and penalties</li>
+                    <li><strong>Continent</strong> — Grants a permanent resource production bonus</li>
+                    <li><strong>Flag</strong> — Pick a pattern and choose 3 colors</li>
+                </ul>
+
+                <div class="info-card tip">
+                    <strong>💡 New Player Protection:</strong> New nations receive 168 turns of "beige" protection — you
+                    cannot be attacked during this time, but you also cannot attack others. Use this time to build up
+                    your economy!
+                </div>
+
+                <h3>What You Start With</h3>
+                <p>Every new nation begins with:</p>
+                <div class="stat-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">💵</div>
+                        <div class="stat-name">$50,000</div>
+                        <div class="stat-desc">Starting treasury</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">🌾</div>
+                        <div class="stat-name">500 Food</div>
+                        <div class="stat-desc">Initial food reserves</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">🏙️</div>
+                        <div class="stat-name">1 Capital City</div>
+                        <div class="stat-desc">With basic improvements</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">🪖</div>
+                        <div class="stat-name">5,000 Infantry</div>
+                        <div class="stat-desc">Starting army</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ──────────── ECONOMY ──────────── -->
+            <section id="economy" class="guide-section">
+                <div class="section-header">
+                    <span class="section-icon">💰</span>
+                    <h2 class="section-title">Economy</h2>
+                </div>
+
+                <p>Your economy is the backbone of your nation. Everything — military, buildings, spies — costs money
+                    and resources. Strong management keeps you competitive.</p>
+
+                <h3>Resources</h3>
+                <p>There are 8 resources in SOVEREIGN. Each is produced by specific city improvements.</p>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Resource</th>
+                            <th>Produced By</th>
+                            <th>Used For</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="icon-col">💰</td>
+                            <td><strong>Money</strong></td>
+                            <td>Taxes, Commerce buildings</td>
+                            <td>Everything — the universal currency</td>
+                        </tr>
+                        <tr>
+                            <td class="icon-col">🌾</td>
+                            <td><strong>Food</strong></td>
+                            <td>Farms (50/turn each)</td>
+                            <td>Population growth, infantry upkeep</td>
+                        </tr>
+                        <tr>
+                            <td class="icon-col">🔩</td>
+                            <td><strong>Steel</strong></td>
+                            <td>Iron Mines (20/turn)</td>
+                            <td>Tanks, ships, missiles</td>
+                        </tr>
+                        <tr>
+                            <td class="icon-col">🛢️</td>
+                            <td><strong>Oil</strong></td>
+                            <td>Oil Wells (10/turn)</td>
+                            <td>Vehicles, aircraft, navy</td>
+                        </tr>
+                        <tr>
+                            <td class="icon-col">⚙️</td>
+                            <td><strong>Aluminum</strong></td>
+                            <td>Bauxite Mines (10/turn)</td>
+                            <td>Aircraft, carriers</td>
+                        </tr>
+                        <tr>
+                            <td class="icon-col">💣</td>
+                            <td><strong>Munitions</strong></td>
+                            <td>Munitions Factory (15/turn)</td>
+                            <td>Infantry, artillery, missiles</td>
+                        </tr>
+                        <tr>
+                            <td class="icon-col">☢️</td>
+                            <td><strong>Uranium</strong></td>
+                            <td>Uranium Mines (3/turn)</td>
+                            <td>Nuclear warheads, ballistic missiles</td>
+                        </tr>
+                        <tr>
+                            <td class="icon-col">💎</td>
+                            <td><strong>Rare Minerals</strong></td>
+                            <td>Rare Mines (2/turn)</td>
+                            <td>Drones, nukes, missile defense</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>Income & Expenses</h3>
+                <p>Each turn, your nation earns income from <strong>taxes</strong> (based on population × tax rate) and
+                    <strong>commerce</strong> (from banks, supermarkets, malls, stadiums). Expenses include building
+                    upkeep and military maintenance.</p>
+
+                <div class="info-card warning">
+                    <strong>⚠️ Negative Treasury:</strong> If your treasury drops below zero, 5% of your military units
+                    will desert each turn until you recover.
+                </div>
+
+                <h3>City Improvements</h3>
+                <p>Build improvements in your cities to produce resources, generate power, boost commerce, and expand
+                    your military capacity. Each improvement has a cost, upkeep, and a per-city limit.</p>
+
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Category</th>
+                            <th>Examples</th>
+                            <th>Purpose</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="tag tag-power">⚡ Power</span></td>
+                            <td>Coal Plant, Oil Plant, Nuclear Plant, Wind Farm</td>
+                            <td>All improvements need power to operate</td>
+                        </tr>
+                        <tr>
+                            <td><span class="tag tag-resource">🌾 Resource</span></td>
+                            <td>Farm, Iron Mine, Oil Well, Bauxite Mine, Uranium Mine</td>
+                            <td>Produce raw resources each turn</td>
+                        </tr>
+                        <tr>
+                            <td><span class="tag tag-commerce">🏦 Commerce</span></td>
+                            <td>Bank, Supermarket, Mall, Stadium</td>
+                            <td>Generate money income</td>
+                        </tr>
+                        <tr>
+                            <td><span class="tag tag-civil">🏥 Civil</span></td>
+                            <td>Hospital, Police Station, Subway, Recycling Center</td>
+                            <td>Boost approval, reduce crime/pollution</td>
+                        </tr>
+                        <tr>
+                            <td><span class="tag tag-military">🏗️ Military</span></td>
+                            <td>Barracks, Arms Factory, Air Base, Drydock, Missile Pad</td>
+                            <td>Unlock and house military units</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>Infrastructure & Land</h3>
+                <p>Each city has <strong>infrastructure</strong> and <strong>land</strong>. Higher infrastructure
+                    increases your tax income and population capacity. Infrastructure costs scale with current levels —
+                    the cost formula is: <code>base × (1 + currentInfra / 500)</code>.</p>
+
+                <h3>Market Trading</h3>
+                <p>Buy and sell resources on the world market at fluctuating prices. Prices change each turn based on
+                    supply/demand. There is a 5% markup on trades.</p>
+
+                <div class="info-card tip">
+                    <strong>💡 Trade Limits:</strong> Max 500 units per transaction, up to 10 trades per hour. Watch
+                    market prices to buy low and sell high!
+                </div>
+            </section>
+
+            <!-- ──────────── POLITICS ──────────── -->
+            <section id="politics" class="guide-section">
+                <div class="section-header">
+                    <span class="section-icon">🏛️</span>
+                    <h2 class="section-title">Politics & Government</h2>
+                </div>
+
+                <p>Your government type and policy settings shape your nation's strengths and weaknesses. Choose wisely
+                    — each has trade-offs.</p>
+
+                <h3>Government Types</h3>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Type</th>
+                            <th>Bonuses</th>
+                            <th>Penalties</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="icon-col">🗳️</td>
+                            <td><strong>Democracy</strong></td>
+                            <td class="stat-pos">+10 Approval, +10% Commerce</td>
+                            <td class="stat-neg">+10% Military Cost</td>
+                        </tr>
+                        <tr>
+                            <td class="icon-col">🏛️</td>
+                            <td><strong>Republic</strong></td>
+                            <td class="stat-pos">+10% Tax Income, +5 Stability</td>
+                            <td class="stat-neg">-5 Approval</td>
+                        </tr>
+                        <tr>
+                            <td class="icon-col">👑</td>
+                            <td><strong>Monarchy</strong></td>
+                            <td class="stat-pos">+15 Stability</td>
+                            <td class="stat-neg">-10 Approval, -5% Commerce</td>
+                        </tr>
+                        <tr>
+                            <td class="icon-col">☭</td>
+                            <td><strong>Communist</strong></td>
+                            <td class="stat-pos">+15% Resource Prod, -15% Mil Cost</td>
+                            <td class="stat-neg">-20% Commerce</td>
+                        </tr>
+                        <tr>
+                            <td class="icon-col">🦅</td>
+                            <td><strong>Dictatorship</strong></td>
+                            <td class="stat-pos">-20% Military Cost, +10 Stability</td>
+                            <td class="stat-neg">-15 Approval, -10% Commerce</td>
+                        </tr>
+                        <tr>
+                            <td class="icon-col">⛪</td>
+                            <td><strong>Theocracy</strong></td>
+                            <td class="stat-pos">+5 Approval, +10 Stability</td>
+                            <td class="stat-neg">-15% Commerce, -5% Resources</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>Policies</h3>
+                <p>You can adjust these policies at any time to change your nation's direction:</p>
+
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Policy</th>
+                            <th>Range</th>
+                            <th>Effect</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Tax Rate</strong></td>
+                            <td>0% – 40%</td>
+                            <td>Higher taxes = more income but less approval</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Social Spending</strong></td>
+                            <td>0% – 30%</td>
+                            <td>Increases approval and population growth, costs money</td>
+                        </tr>
+                        <tr>
+                            <td><strong>War Policy</strong></td>
+                            <td>4 options</td>
+                            <td>Affects attack/defense multipliers and economy</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Military Doctrine</strong></td>
+                            <td>5 options</td>
+                            <td>Balanced, Blitzkrieg, Guerrilla, Fortified, Firepower</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>War Policies</h3>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Policy</th>
+                            <th>Attack</th>
+                            <th>Defense</th>
+                            <th>Economy</th>
+                            <th>Approval</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="icon-col">⚖️</td>
+                            <td>Normal</td>
+                            <td>×1.0</td>
+                            <td>×1.0</td>
+                            <td>×1.0</td>
+                            <td>—</td>
+                        </tr>
+                        <tr>
+                            <td class="icon-col">🗡️</td>
+                            <td>Aggressive</td>
+                            <td class="stat-pos">×1.2</td>
+                            <td class="stat-neg">×0.9</td>
+                            <td class="stat-neg">×0.95</td>
+                            <td class="stat-neg">-10</td>
+                        </tr>
+                        <tr>
+                            <td class="icon-col">🛡️</td>
+                            <td>Defensive</td>
+                            <td class="stat-neg">×0.8</td>
+                            <td class="stat-pos">×1.25</td>
+                            <td>×1.0</td>
+                            <td class="stat-pos">+5</td>
+                        </tr>
+                        <tr>
+                            <td class="icon-col">🕊️</td>
+                            <td>Pacifist</td>
+                            <td class="stat-neg">×0.5</td>
+                            <td class="stat-neg">×0.7</td>
+                            <td class="stat-pos">×1.15</td>
+                            <td class="stat-pos">+10</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>Approval & Stability</h3>
+                <p><strong>Approval</strong> reflects how your people feel about your leadership. It's affected by tax
+                    rate, social spending, government type, wars, and civil improvements. <strong>Stability</strong>
+                    represents internal order — affected by wars, government type, police stations, and random events.
+                    Both range from 0 to 100.</p>
+
+                <div class="info-card danger">
+                    <strong>🚨 War Exhaustion:</strong> Each active war costs you 2 approval and 3 stability per turn.
+                    Avoid long, multi-front wars!
+                </div>
+            </section>
+
+            <!-- ──────────── MILITARY ──────────── -->
+            <section id="military" class="guide-section">
+                <div class="section-header">
+                    <span class="section-icon">⚔️</span>
+                    <h2 class="section-title">Military</h2>
+                </div>
+
+                <p>Build, maintain, and deploy your armed forces. Military strength is critical for defense, war
+                    deterrence, and conquest.</p>
+
+                <h3>Unit Branches</h3>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Unit</th>
+                            <th>Branch</th>
+                            <th>STR</th>
+                            <th>DEF</th>
+                            <th>Requires</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="icon-col">🪖</td>
+                            <td>Infantry</td>
+                            <td><span class="tag tag-army">Army</span></td>
+                            <td>1</td>
+                            <td>2</td>
+                            <td>Barracks</td>
+                        </tr>
+                        <tr>
+                            <td class="icon-col">🚛</td>
+                            <td>Mech Infantry</td>
+                            <td><span class="tag tag-army">Army</span></td>
+                            <td>3</td>
+                            <td>3</td>
+                            <td>Barracks</td>
+                        </tr>
+                        <tr>
+                            <td class="icon-col">🛡️</td>
+                            <td>Tanks</td>
+                            <td><span class="tag tag-army">Army</span></td>
+                            <td>10</td>
+                            <td>8</td>
+                            <td>Arms Factory</td>
+                        </tr>
+                        <tr>
+                            <td class="icon-col">💣</td>
+                            <td>Artillery</td>
+                            <td><span class="tag tag-army">Army</span></td>
+                            <td>12</td>
+                            <td>2</td>
+                            <td>Arms Factory</td>
+                        </tr>
+                        <tr>
+                            <td class="icon-col">🎯</td>
+                            <td>Special Forces</td>
+                            <td><span class="tag tag-army">Army</span></td>
+                            <td>8</td>
+                            <td>6</td>
+                            <td>Barracks</td>
+                        </tr>
+                        <tr>
+                            <td class="icon-col">🔫</td>
+                            <td>Anti-Air</td>
+                            <td><span class="tag tag-army">Army</span></td>
+                            <td>3</td>
+                            <td>15</td>
+                            <td>Arms Factory</td>
+                        </tr>
+                        <tr>
+                            <td class="icon-col">✈️</td>
+                            <td>Fighter Jets</td>
+                            <td><span class="tag tag-air">Air Force</span></td>
+                            <td>15</td>
+                            <td>10</td>
+                            <td>Air Base</td>
+                        </tr>
+                        <tr>
+                            <td class="icon-col">💥</td>
+                            <td>Bombers</td>
+                            <td><span class="tag tag-air">Air Force</span></td>
+                            <td>25</td>
+                            <td>5</td>
+                            <td>Air Base</td>
+                        </tr>
+                        <tr>
+                            <td class="icon-col">🚁</td>
+                            <td>Helicopters</td>
+                            <td><span class="tag tag-air">Air Force</span></td>
+                            <td>8</td>
+                            <td>5</td>
+                            <td>Air Base</td>
+                        </tr>
+                        <tr>
+                            <td class="icon-col">🤖</td>
+                            <td>Combat Drones</td>
+                            <td><span class="tag tag-air">Air Force</span></td>
+                            <td>6</td>
+                            <td>2</td>
+                            <td>Air Base</td>
+                        </tr>
+                        <tr>
+                            <td class="icon-col">🚢</td>
+                            <td>Destroyers</td>
+                            <td><span class="tag tag-navy">Navy</span></td>
+                            <td>20</td>
+                            <td>15</td>
+                            <td>Drydock</td>
+                        </tr>
+                        <tr>
+                            <td class="icon-col">⛵</td>
+                            <td>Frigates</td>
+                            <td><span class="tag tag-navy">Navy</span></td>
+                            <td>12</td>
+                            <td>10</td>
+                            <td>Drydock</td>
+                        </tr>
+                        <tr>
+                            <td class="icon-col">🐟</td>
+                            <td>Submarines</td>
+                            <td><span class="tag tag-navy">Navy</span></td>
+                            <td>18</td>
+                            <td>12</td>
+                            <td>Drydock</td>
+                        </tr>
+                        <tr>
+                            <td class="icon-col">🛳️</td>
+                            <td>Aircraft Carriers</td>
+                            <td><span class="tag tag-navy">Navy</span></td>
+                            <td>30</td>
+                            <td>20</td>
+                            <td>Drydock</td>
+                        </tr>
+                        <tr>
+                            <td class="icon-col">🚀</td>
+                            <td>Cruise Missiles</td>
+                            <td><span class="tag tag-strategic">Strategic</span></td>
+                            <td>40</td>
+                            <td>0</td>
+                            <td>Missile Pad (1-use)</td>
+                        </tr>
+                        <tr>
+                            <td class="icon-col">☄️</td>
+                            <td>Ballistic Missiles</td>
+                            <td><span class="tag tag-strategic">Strategic</span></td>
+                            <td>80</td>
+                            <td>0</td>
+                            <td>Missile Pad (1-use)</td>
+                        </tr>
+                        <tr>
+                            <td class="icon-col">☢️</td>
+                            <td>Nuclear Warheads</td>
+                            <td><span class="tag tag-strategic">Strategic</span></td>
+                            <td>500</td>
+                            <td>0</td>
+                            <td>Missile Pad (1-use)</td>
+                        </tr>
+                        <tr>
+                            <td class="icon-col">🛡️</td>
+                            <td>Missile Defense</td>
+                            <td><span class="tag tag-strategic">Strategic</span></td>
+                            <td>0</td>
+                            <td>100</td>
+                            <td>Missile Pad</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>War Declaration</h3>
+                <p>To declare war, several conditions must be met:</p>
+                <ul style="color: var(--text-secondary); margin: 0.5rem 0 1.5rem 1.5rem;">
+                    <li>Target must be within your <strong>war range</strong> (score × 0.4 to score × 1.6)</li>
+                    <li>Neither side can be under <strong>beige protection</strong></li>
+                    <li>No active <strong>Non-Aggression Pact</strong> between you</li>
+                    <li>Max <strong>3 offensive wars</strong> at the same time</li>
+                    <li><strong>12-turn cooldown</strong> before re-declaring war on the same nation</li>
+                    <li>Unprovoked war costs <strong>-30 approval</strong></li>
+                </ul>
+
+                <h3>Battle System</h3>
+                <p>In each war, both sides get <strong>3 action points</strong> per turn. Each battle costs 1 AP. Choose
+                    your attack type:</p>
+
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Attack Type</th>
+                            <th>Uses</th>
+                            <th>Terrain Effects</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="icon-col">🪖</td>
+                            <td>Ground Assault</td>
+                            <td>Army</td>
+                            <td>Weak in mountains (×0.6), forests (×0.8)</td>
+                        </tr>
+                        <tr>
+                            <td class="icon-col">✈️</td>
+                            <td>Air Strike</td>
+                            <td>Air Force</td>
+                            <td>Slightly reduced in forests, urban</td>
+                        </tr>
+                        <tr>
+                            <td class="icon-col">🚢</td>
+                            <td>Naval Bombardment</td>
+                            <td>Navy</td>
+                            <td>Strong on coast (×1.3), weak inland</td>
+                        </tr>
+                        <tr>
+                            <td class="icon-col">🚀</td>
+                            <td>Missile Strike</td>
+                            <td>Strategic</td>
+                            <td>No terrain modifiers</td>
+                        </tr>
+                        <tr>
+                            <td class="icon-col">⚔️</td>
+                            <td>Combined Arms</td>
+                            <td>All branches</td>
+                            <td>No terrain modifiers</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>Defense Postures</h3>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Posture</th>
+                            <th>Defense ×</th>
+                            <th>Counter Chance</th>
+                            <th>Preserve Units</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Dig In</td>
+                            <td class="stat-pos">×1.5</td>
+                            <td>0%</td>
+                            <td>0%</td>
+                        </tr>
+                        <tr>
+                            <td>Counter Attack</td>
+                            <td>×1.0</td>
+                            <td class="stat-pos">40%</td>
+                            <td>0%</td>
+                        </tr>
+                        <tr>
+                            <td>Guerrilla</td>
+                            <td class="stat-pos">×1.2</td>
+                            <td>20%</td>
+                            <td>30%</td>
+                        </tr>
+                        <tr>
+                            <td>Strategic Retreat</td>
+                            <td class="stat-neg">×0.5</td>
+                            <td>0%</td>
+                            <td class="stat-pos">70%</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>War Resolution</h3>
+                <p>Wars end when one side reaches <strong>100 war score</strong>, or when a player offers peace. The
+                    winner receives <strong>10% of the loser's treasury and resources</strong> as loot.</p>
+            </section>
+
+            <!-- ──────────── DIPLOMACY ──────────── -->
+            <section id="diplomacy" class="guide-section">
+                <div class="section-header">
+                    <span class="section-icon">🤝</span>
+                    <h2 class="section-title">Diplomacy</h2>
+                </div>
+
+                <p>Build relationships with other nations through alliances and treaties. Diplomacy can be more powerful
+                    than military strength alone.</p>
+
+                <h3>Alliances</h3>
+                <p>Create or join an alliance to cooperate with other nations. Alliance features include:</p>
+                <ul style="color: var(--text-secondary); margin: 0.5rem 0 1.5rem 1.5rem;">
+                    <li><strong>Alliance Bank</strong> — Deposit and withdraw shared funds (founder only for
+                        withdrawals)</li>
+                    <li><strong>Roles</strong> — Founder, Officer, and Member with different permissions</li>
+                    <li><strong>Alliance Chat</strong> — Private messages visible only to alliance members</li>
+                    <li><strong>Bio/Description</strong> — Officers+ can edit the alliance description</li>
+                    <li><strong>Member Management</strong> — Promote, demote, or kick members (must outrank target)</li>
+                </ul>
+
+                <h3>Treaties</h3>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Abbr</th>
+                            <th>Treaty</th>
+                            <th>Effect</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="tag tag-army">MDP</span></td>
+                            <td>Mutual Defense Pact</td>
+                            <td>Both nations agree to defend each other if attacked</td>
+                        </tr>
+                        <tr>
+                            <td><span class="tag tag-navy">ODP</span></td>
+                            <td>Optional Defense Pact</td>
+                            <td>Optional assistance in defense — no obligation</td>
+                        </tr>
+                        <tr>
+                            <td><span class="tag tag-air">NAP</span></td>
+                            <td>Non-Aggression Pact</td>
+                            <td>Prevents either side from declaring war on the other</td>
+                        </tr>
+                        <tr>
+                            <td><span class="tag tag-commerce">TRADE</span></td>
+                            <td>Trade Agreement</td>
+                            <td>Mutual trade relationship</td>
+                        </tr>
+                        <tr>
+                            <td><span class="tag tag-strategic">EMBARGO</span></td>
+                            <td>Embargo</td>
+                            <td>Block trade with the target nation</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="info-card tip">
+                    <strong>💡 NAP Strategy:</strong> A Non-Aggression Pact must be cancelled before you can declare
+                    war. Use NAPs to protect your flanks while focusing on other threats.
+                </div>
+            </section>
+
+            <!-- ──────────── MESSAGING ──────────── -->
+            <section id="messaging" class="guide-section">
+                <div class="section-header">
+                    <span class="section-icon">✉️</span>
+                    <h2 class="section-title">Messaging</h2>
+                </div>
+
+                <p>Communicate with other nations through the in-game messaging system to negotiate, threaten, or
+                    coordinate strategy.</p>
+
+                <h3>Message Types</h3>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Type</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="icon-col">💬</td>
+                            <td><strong>Normal</strong></td>
+                            <td>Standard diplomatic communication</td>
+                        </tr>
+                        <tr>
+                            <td class="icon-col">⚔️</td>
+                            <td><strong>War Demand</strong></td>
+                            <td>Ultimatums and war-related demands</td>
+                        </tr>
+                        <tr>
+                            <td class="icon-col">📦</td>
+                            <td><strong>Trade Offer</strong></td>
+                            <td>Proposing resource trades to another nation</td>
+                        </tr>
+                        <tr>
+                            <td class="icon-col">🔔</td>
+                            <td><strong>System</strong></td>
+                            <td>Automated notifications from game events</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>Inbox Features</h3>
+                <p>Your inbox shows the 50 most recent messages with unread indicators. You receive real-time
+                    notifications via WebSocket when a new message arrives.</p>
+
+                <div class="info-card warning">
+                    <strong>⚠️ Rate Limit:</strong> You can send up to 10 messages per hour to prevent spam. Messages
+                    are sanitized — no HTML tags allowed.
+                </div>
+            </section>
+
+            <!-- ──────────── ESPIONAGE ──────────── -->
+            <section id="espionage" class="guide-section">
+                <div class="section-header">
+                    <span class="section-icon">🕵️</span>
+                    <h2 class="section-title">Espionage</h2>
+                </div>
+
+                <p>Deploy your spies on covert missions against enemy nations. Each spy is consumed per mission, and
+                    there's a cooldown per target.</p>
+
+                <h3>Spy Missions</h3>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Mission</th>
+                            <th>Cost</th>
+                            <th>Risk</th>
+                            <th>Effect</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="icon-col">🔍</td>
+                            <td>Gather Intel</td>
+                            <td>$5,000</td>
+                            <td class="stat-pos">10%</td>
+                            <td>Reveals enemy military, money, score</td>
+                        </tr>
+                        <tr>
+                            <td class="icon-col">💣</td>
+                            <td>Sabotage</td>
+                            <td>$10,000</td>
+                            <td class="stat-neutral">30%</td>
+                            <td>Destroys 5 infrastructure in a random city</td>
+                        </tr>
+                        <tr>
+                            <td class="icon-col">📢</td>
+                            <td>Propaganda</td>
+                            <td>$8,000</td>
+                            <td class="stat-pos">20%</td>
+                            <td>Reduces target's approval by 10</td>
+                        </tr>
+                        <tr>
+                            <td class="icon-col">🔬</td>
+                            <td>Steal Tech</td>
+                            <td>$15,000</td>
+                            <td class="stat-neutral">40%</td>
+                            <td>Gain +10 Rare Minerals</td>
+                        </tr>
+                        <tr>
+                            <td class="icon-col">🗡️</td>
+                            <td>Assassinate</td>
+                            <td>$50,000</td>
+                            <td class="stat-neg">60%</td>
+                            <td>-30 Stability, -20 Approval to target</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <p>The <strong>Risk</strong> column shows the chance of your spy being caught. A caught spy is publicly
+                    announced in world news.</p>
+
+                <div class="info-card danger">
+                    <strong>🚨 Cooldown:</strong> 6-turn cooldown between spy missions against the same target. Plan
+                    your espionage campaign carefully!
+                </div>
+            </section>
+
+            <!-- ──────────── WORLD ──────────── -->
+            <section id="world" class="guide-section">
+                <div class="section-header">
+                    <span class="section-icon">🌍</span>
+                    <h2 class="section-title">World & Rankings</h2>
+                </div>
+
+                <p>The global stage is your playing field. Track the balance of power, read world news, and see where
+                    your nation ranks.</p>
+
+                <h3>Nation Scoring</h3>
+                <p>Your score is calculated from:</p>
+                <ul style="color: var(--text-secondary); margin: 0.5rem 0 1.5rem 1.5rem;">
+                    <li><strong>Infrastructure</strong> — 2 points per infrastructure level</li>
+                    <li><strong>Population</strong> — 1 point per 1,000 citizens</li>
+                    <li><strong>Military</strong> — Units × their strength rating</li>
+                    <li><strong>Treasury</strong> — 1 point per $1,000</li>
+                </ul>
+
+                <h3>Turn Ticks</h3>
+                <p>The game world advances in <strong>ticks</strong> every <strong>2 hours</strong>. Each tick
+                    processes:</p>
+                <ul style="color: var(--text-secondary); margin: 0.5rem 0 1.5rem 1.5rem;">
+                    <li>Resource production and consumption</li>
+                    <li>Income collection and expense deduction</li>
+                    <li>Population growth</li>
+                    <li>Approval and stability updates</li>
+                    <li>Market price fluctuation</li>
+                    <li>Active war processing</li>
+                    <li>Random world events</li>
+                </ul>
+
+                <h3>Continents & Bonuses</h3>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Continent</th>
+                            <th>Bonus</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="icon-col">🌎</td>
+                            <td>North America</td>
+                            <td class="stat-pos">+5% Money Income</td>
+                        </tr>
+                        <tr>
+                            <td class="icon-col">🌎</td>
+                            <td>South America</td>
+                            <td class="stat-pos">+10% Food Production</td>
+                        </tr>
+                        <tr>
+                            <td class="icon-col">🌍</td>
+                            <td>Europe</td>
+                            <td class="stat-pos">+10% Steel Production</td>
+                        </tr>
+                        <tr>
+                            <td class="icon-col">🌍</td>
+                            <td>Africa</td>
+                            <td class="stat-pos">+10% Oil Production</td>
+                        </tr>
+                        <tr>
+                            <td class="icon-col">🌏</td>
+                            <td>Asia</td>
+                            <td class="stat-pos">+10% Munitions Production</td>
+                        </tr>
+                        <tr>
+                            <td class="icon-col">🌏</td>
+                            <td>Oceania</td>
+                            <td class="stat-pos">+10% Aluminum Production</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- ──────────── CUSTOMIZATION ──────────── -->
+            <section id="customization" class="guide-section">
+                <div class="section-header">
+                    <span class="section-icon">🎨</span>
+                    <h2 class="section-title">Nation Customization</h2>
+                </div>
+
+                <p>Make your nation uniquely yours with these customization options available after founding:</p>
+
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Option</th>
+                            <th>Details</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Nation Bio</strong></td>
+                            <td>Write a description for your nation page (up to 500 characters)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Leader Title</strong></td>
+                            <td>Custom title like President, Emperor, Supreme Leader (up to 50 characters)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Leader Portrait</strong></td>
+                            <td>Set a portrait image for your leader</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Accent Color</strong></td>
+                            <td>Choose a hex color to personalize your nation's theme</td>
+                        </tr>
+                        <tr>
+                            <td><strong>National Anthem</strong></td>
+                            <td>Set a custom anthem name/URL for style</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Bonus Resource</strong></td>
+                            <td>Choose one resource for an extra +10% production bonus</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>Bonus Resources</h3>
+                <div class="stat-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">🍞</div>
+                        <div class="stat-name">Agricultural Surplus</div>
+                        <div class="stat-desc">+10% Food</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">⛓️</div>
+                        <div class="stat-name">Industrial Might</div>
+                        <div class="stat-desc">+10% Steel</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">🛢️</div>
+                        <div class="stat-name">Energy Independence</div>
+                        <div class="stat-desc">+10% Oil</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">📎</div>
+                        <div class="stat-name">Aviation Focus</div>
+                        <div class="stat-desc">+10% Aluminum</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">📦</div>
+                        <div class="stat-name">Arms Manufacturer</div>
+                        <div class="stat-desc">+10% Munitions</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">☢️</div>
+                        <div class="stat-name">Nuclear Energy</div>
+                        <div class="stat-desc">+10% Uranium</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">💎</div>
+                        <div class="stat-name">High-Tech Exports</div>
+                        <div class="stat-desc">+10% Rare</div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- ═══ Footer ═══ -->
+    <footer class="guide-footer">
+        SOVEREIGN v0.1.0 — Game Guide · Stay Sovereign 🌐
+    </footer>
+
+    <!-- ═══ Sidebar Active Link Highlight ═══ -->
+    <script>
+        // Highlight current section in sidebar
+        const sections = document.querySelectorAll('.guide-section');
+        const navLinks = document.querySelectorAll('.nav-list a');
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    navLinks.forEach(link => link.classList.remove('active'));
+                    const activeLink = document.querySelector(`.nav-list a[href="#${entry.target.id}"]`);
+                    if (activeLink) activeLink.classList.add('active');
+                }
+            });
+        }, { rootMargin: '-20% 0px -60% 0px' });
+
+        sections.forEach(section => observer.observe(section));
+
+        // Set first link active by default
+        if (navLinks.length) navLinks[0].classList.add('active');
+    </script>
+</body>
+
+</html>

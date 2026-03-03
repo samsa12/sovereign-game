@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sovereign — Geopolitical Strategy</title>
+    <meta name="description"
+        content="A realistic geopolitical simulation game. Build your nation, forge alliances, command armies, and shape world history.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;500;600;700&family=Barlow:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css?v=2.1">
+</head>
+
+<body>
+
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- LANDING PAGE + AUTH                         -->
+    <!-- ═══════════════════════════════════════════ -->
+    <div id="landing-page" class="landing-page">
+        <canvas id="particle-canvas" class="particle-canvas"></canvas>
+        <div class="landing-content">
+            <div class="landing-hero">
+                <span class="logo-icon"><i class="fa-solid fa-earth-americas"></i></span>
+                <h1 class="logo-title">SOVEREIGN</h1>
+                <p class="logo-subtitle">GEOPOLITICAL STRATEGY</p>
+                <p class="landing-tagline">Build your nation. Forge alliances. Shape history.</p>
+            </div>
+
+            <!-- Auth Panel -->
+            <div class="auth-panel" id="auth-panel">
+                <div class="auth-tabs">
+                    <button class="auth-tab active" id="tab-login" onclick="showAuthTab('login')">Login</button>
+                    <button class="auth-tab" id="tab-register" onclick="showAuthTab('register')">Register</button>
+                </div>
+
+                <!-- Login Form -->
+                <form id="login-form" class="auth-form" onsubmit="handleLogin(event)">
+                    <div class="form-group">
+                        <label for="login-username"><i class="fa-solid fa-user"></i> Username</label>
+                        <input type="text" id="login-username" placeholder="Enter your username" required
+                            autocomplete="username">
+                    </div>
+                    <div class="form-group">
+                        <label for="login-password"><i class="fa-solid fa-lock"></i> Password</label>
+                        <input type="password" id="login-password" placeholder="Enter your password" required
+                            autocomplete="current-password">
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-lg" style="width:100%">
+                        <i class="fa-solid fa-right-to-bracket"></i> Login
+                    </button>
+                    <div id="login-error" class="auth-error"></div>
+                </form>
+
+                <!-- Register Form -->
+                <form id="register-form" class="auth-form hidden" onsubmit="handleRegister(event)">
+                    <div class="form-group">
+                        <label for="reg-username"><i class="fa-solid fa-user"></i> Username</label>
+                        <input type="text" id="reg-username" placeholder="Choose a username" required minlength="3"
+                            maxlength="30" autocomplete="username">
+                    </div>
+                    <div class="form-group">
+                        <label for="reg-email"><i class="fa-solid fa-envelope"></i> Email</label>
+                        <input type="email" id="reg-email" placeholder="your@email.com" required autocomplete="email">
+                    </div>
+                    <div class="form-group">
+                        <label for="reg-password"><i class="fa-solid fa-lock"></i> Password</label>
+                        <input type="password" id="reg-password" placeholder="Min 6 characters" required minlength="6"
+                            autocomplete="new-password">
+                    </div>
+                    <button type="submit" class="btn btn-accent btn-lg" style="width:100%">
+                        <i class="fa-solid fa-user-plus"></i> Create Account
+                    </button>
+                    <div id="register-error" class="auth-error"></div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- LOADING SCREEN                              -->
+    <!-- ═══════════════════════════════════════════ -->
+    <div id="loading-screen" class="loading-screen hidden">
+        <div class="loading-content">
+            <div class="loading-logo">
+                <span class="logo-icon"><i class="fa-solid fa-earth-americas"></i></span>
+                <h1 class="logo-title">SOVEREIGN</h1>
+                <p class="logo-subtitle">GEOPOLITICAL STRATEGY</p>
+            </div>
+            <div class="loading-bar-container">
+                <div class="loading-bar" id="loading-bar"></div>
+            </div>
+            <p class="loading-text" id="loading-text">Initializing world systems...</p>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- NATION CREATION WIZARD                      -->
+    <!-- ═══════════════════════════════════════════ -->
+    <div id="creation-screen" class="creation-screen hidden">
+        <div class="creation-container">
+            <div class="creation-header">
+                <h1><span class="accent">SOVEREIGN</span> — Nation Creation</h1>
+                <p>Forge your nation and shape the course of history</p>
+            </div>
+
+            <div class="creation-steps">
+                <div class="step active" data-step="1">
+                    <span class="step-num">1</span>
+                    <span class="step-label">Identity</span>
+                </div>
+                <div class="step-line"></div>
+                <div class="step" data-step="2">
+                    <span class="step-num">2</span>
+                    <span class="step-label">Government</span>
+                </div>
+                <div class="step-line"></div>
+                <div class="step" data-step="3">
+                    <span class="step-num">3</span>
+                    <span class="step-label">Geography</span>
+                </div>
+                <div class="step-line"></div>
+                <div class="step" data-step="4">
+                    <span class="step-num">4</span>
+                    <span class="step-label">Flag</span>
+                </div>
+                <div class="step-line"></div>
+                <div class="step" data-step="5">
+                    <span class="step-num">5</span>
+                    <span class="step-label">Review</span>
+                </div>
+            </div>
+
+            <div class="creation-step-content active" id="step-1">
+                <h2>Your Nation's Identity</h2>
+                <div class="form-group">
+                    <label for="nation-name">Nation Name</label>
+                    <input type="text" id="nation-name" placeholder="e.g. Republic of Aurelia" maxlength="40"
+                        autocomplete="off">
+                    <span class="form-hint">The official name of your sovereign state</span>
+                </div>
+                <div class="form-group">
+                    <label for="leader-name">Leader Name</label>
+                    <input type="text" id="leader-name" placeholder="e.g. President Marcus Vale" maxlength="40"
+                        autocomplete="off">
+                    <span class="form-hint">Your title and name as head of state</span>
+                </div>
+                <div class="form-group">
+                    <label for="nation-motto">National Motto</label>
+                    <input type="text" id="nation-motto" placeholder="e.g. Strength Through Unity" maxlength="60"
+                        autocomplete="off">
+                    <span class="form-hint">A slogan that defines your nation's spirit</span>
+                </div>
+                <div class="form-group">
+                    <label for="currency-name">Currency Name</label>
+                    <input type="text" id="currency-name" placeholder="e.g. Aurelian Dollar" maxlength="30"
+                        autocomplete="off">
+                    <span class="form-hint">The name of your national currency</span>
+                </div>
+            </div>
+
+            <div class="creation-step-content" id="step-2">
+                <h2>Form of Government</h2>
+                <p class="step-desc">Each government type provides unique bonuses and penalties that shape your nation's
+                    strengths.</p>
+                <div class="gov-grid" id="gov-grid"></div>
+            </div>
+
+            <div class="creation-step-content" id="step-3">
+                <h2>Geographic Region</h2>
+                <p class="step-desc">Choose your nation's home continent. This affects starting resources and available
+                    trade routes.</p>
+                <div class="continent-grid" id="continent-grid"></div>
+            </div>
+
+            <div class="creation-step-content" id="step-4">
+                <h2>National Flag</h2>
+                <p class="step-desc">Design your flag by choosing colors and a pattern.</p>
+                <div class="flag-designer">
+                    <div class="flag-preview-large" id="flag-preview-large">
+                        <div class="flag-canvas" id="flag-canvas"></div>
+                    </div>
+                    <div class="flag-controls">
+                        <div class="form-group">
+                            <label>Pattern</label>
+                            <div class="pattern-grid" id="pattern-grid"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>Primary Color</label>
+                            <input type="color" id="flag-color-1" value="#1a5276">
+                        </div>
+                        <div class="form-group">
+                            <label>Secondary Color</label>
+                            <input type="color" id="flag-color-2" value="#c0392b">
+                        </div>
+                        <div class="form-group">
+                            <label>Accent Color</label>
+                            <input type="color" id="flag-color-3" value="#f1c40f">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="creation-step-content" id="step-5">
+                <h2>Review Your Nation</h2>
+                <div class="review-card" id="review-card"></div>
+            </div>
+
+            <div class="creation-nav">
+                <button class="btn btn-secondary" id="btn-prev" disabled>← Back</button>
+                <button class="btn btn-primary" id="btn-next">Next →</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- MAIN GAME UI                                -->
+    <!-- ═══════════════════════════════════════════ -->
+    <div id="game-screen" class="game-screen hidden">
+
+        <header class="top-bar">
+            <div class="top-bar-left">
+                <div class="game-logo">
+                    <i class="fa-solid fa-earth-americas logo-icon-sm"></i>
+                    <span class="logo-text">SOVEREIGN</span>
+                </div>
+            </div>
+            <div class="top-bar-center">
+                <div class="resource-bar" id="resource-bar"></div>
+            </div>
+            <div class="top-bar-right">
+                <div class="turn-info" id="turn-info">
+                    <span class="turn-label">Turn</span>
+                    <span class="turn-number" id="turn-number">1</span>
+                </div>
+                <div class="notif-bell" id="notif-bell">
+                    <i class="fa-solid fa-bell"></i>
+                    <span class="notif-badge hidden" id="notif-badge">0</span>
+                </div>
+                <div class="user-menu" id="user-menu">
+                    <div class="user-flag-mini" id="user-flag-mini"></div>
+                    <span class="user-nation-name" id="user-nation-name">My Nation</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="main-layout">
+
+            <nav class="sidebar" id="sidebar">
+                <div class="sidebar-section">
+                    <span class="sidebar-section-title">Nation</span>
+                    <a class="sidebar-link active" data-page="dashboard" href="#">
+                        <span class="sidebar-icon"><i class="fa-solid fa-chart-line"></i></span> Dashboard
+                    </a>
+                    <a class="sidebar-link" data-page="cities" href="#">
+                        <span class="sidebar-icon"><i class="fa-solid fa-city"></i></span> Cities
+                    </a>
+                    <a class="sidebar-link" data-page="economy" href="#">
+                        <span class="sidebar-icon"><i class="fa-solid fa-coins"></i></span> Economy
+                    </a>
+                    <a class="sidebar-link" data-page="policies" href="#">
+                        <span class="sidebar-icon"><i class="fa-solid fa-scroll"></i></span> Policies
+                    </a>
+                </div>
+                <div class="sidebar-section">
+                    <span class="sidebar-section-title">Military</span>
+                    <a class="sidebar-link" data-page="military" href="#">
+                        <span class="sidebar-icon"><i class="fa-solid fa-shield-halved"></i></span> Overview
+                    </a>
+                    <a class="sidebar-link" data-page="wars" href="#">
+                        <span class="sidebar-icon"><i class="fa-solid fa-crosshairs"></i></span> Wars
+                    </a>
+                    <a class="sidebar-link" data-page="intelligence" href="#">
+                        <span class="sidebar-icon"><i class="fa-solid fa-eye"></i></span> Intelligence
+                    </a>
+                </div>
+                <div class="sidebar-section">
+                    <span class="sidebar-section-title">Diplomacy</span>
+                    <a class="sidebar-link" data-page="alliance" href="#">
+                        <span class="sidebar-icon"><i class="fa-solid fa-handshake"></i></span> Alliance
+                    </a>
+                    <a class="sidebar-link" data-page="diplomacy" href="#">
+                        <span class="sidebar-icon"><i class="fa-solid fa-landmark"></i></span> Diplomacy
+                    </a>
+                    <a class="sidebar-link" data-page="trade" href="#">
+                        <span class="sidebar-icon"><i class="fa-solid fa-boxes-stacked"></i></span> Trade
+                    </a>
+                    <a class="sidebar-link" data-page="messages" href="#">
+                        <span class="sidebar-icon"><i class="fa-solid fa-envelope"></i></span> Messages
+                        <span class="sidebar-notif hidden" id="msg-notif"></span>
+                    </a>
+                </div>
+                <div class="sidebar-section">
+                    <span class="sidebar-section-title">World</span>
+                    <a class="sidebar-link" data-page="rankings" href="#">
+                        <span class="sidebar-icon"><i class="fa-solid fa-ranking-star"></i></span> Nations
+                    </a>
+                    <a class="sidebar-link" data-page="news" href="#">
+                        <span class="sidebar-icon"><i class="fa-solid fa-newspaper"></i></span> World News
+                    </a>
+                </div>
+                <div class="sidebar-section">
+                    <span class="sidebar-section-title">Admin</span>
+                    <a class="sidebar-link" data-page="admin" href="#">
+                        <span class="sidebar-icon"><i class="fa-solid fa-screwdriver-wrench"></i></span> Admin Panel
+                    </a>
+                </div>
+                <div class="sidebar-section sidebar-bottom">
+                    <a class="sidebar-link" data-page="settings" href="#">
+                        <span class="sidebar-icon"><i class="fa-solid fa-gear"></i></span> Settings
+                    </a>
+                    <a class="sidebar-link sidebar-logout" href="#" onclick="App.logout()">
+                        <span class="sidebar-icon"><i class="fa-solid fa-right-from-bracket"></i></span> Logout
+                    </a>
+                </div>
+            </nav>
+
+            <main class="content" id="content"></main>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal-overlay hidden" id="modal-overlay">
+        <div class="modal" id="modal">
+            <div class="modal-header" id="modal-header">
+                <h3 id="modal-title">Modal Title</h3>
+                <button class="modal-close" id="modal-close"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body" id="modal-body"></div>
+            <div class="modal-footer" id="modal-footer"></div>
+        </div>
+    </div>
+
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- Scripts — order matters -->
+    <script src="js/landing.js?v=2.2"></script>
+    <script src="js/api.js?v=2.2"></script>
+    <script src="js/data.js?v=2.2"></script>
+    <script src="js/ui.js?v=2.2"></script>
+    <script src="js/pages.js?v=2.2"></script>
+    <script src="js/pages2.js?v=2.2"></script>
+    <script src="js/app.js?v=2.2"></script>
+</body>
+
+</html>

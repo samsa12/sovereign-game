@@ -1,0 +1,171 @@
+/* ═══════════════════════════════════════════════════════════════
+   SOVEREIGN — Main Server
+   Express + SQLite + WebSocket
+   ═══════════════════════════════════════════════════════════════ */
+
+require('dotenv').config();
+const express = require('express');
+const path = require('path');
+const cors = require('cors');
+const helmet = require('helmet');
+const http = require('http');
+const Database = require('better-sqlite3');
+const fs = require('fs');
+const nodemailer = require('nodemailer');
+const { GAME_DATA } = require('./game/data');
+
+// Create Express app
+const app = express();
+const server = http.createServer(app);
+const PORT = process.env.PORT || 3000;
+
+// ─── Database Setup ───
+const dbPath = path.join(__dirname, 'db', 'game.db');
+const db = new Database(dbPath);
+db.pragma('journal_mode = WAL');
+db.pragma('foreign_keys = ON');
+
+// Initialize schema
+const schema = fs.readFileSync(path.join(__dirname, 'db', 'schema.sql'), 'utf8');
+db.exec(schema);
+
+// ─── Market Initialization ───
+// Ensure all resources in GAME_DATA have market pools and prices
+Object.keys(GAME_DATA.resources).forEach(res => {
+    if (res === 'money') return;
+    db.prepare('INSERT OR IGNORE INTO game_state (key, value) VALUES (?, ?)').run(`market_${res}`, '10');
+    db.prepare('INSERT OR IGNORE INTO game_state (key, value) VALUES (?, ?)').run(`pool_${res}`, '5000');
+});
+
+// Make db available globally
+global.db = db;
+
+// ─── Mailer Setup ───
+// We now dynamically pull SMTP settings from the database instead of .env
+// so admins can configure it from the in-game dashboard.
+global.isSmtpConfigured = () => {
+    try {
+        const rows = db.prepare('SELECT key_name, key_value FROM server_settings').all();
+        const settings = {};
+        rows.forEach(r => settings[r.key_name] = r.key_value);
+        return !!(settings.smtp_host && settings.smtp_user && settings.smtp_pass);
+    } catch (err) {
+        return false;
+    }
+};
+
+global.getMailer = () => {
+    const rows = db.prepare('SELECT key_name, key_value FROM server_settings').all();
+    const settings = {};
+    rows.forEach(r => settings[r.key_name] = r.key_value);
+
+    if (!settings.smtp_host || !settings.smtp_user || !settings.smtp_pass) {
+        return null; // No mailer available
+    }
+
+    return nodemailer.createTransport({
+        host: settings.smtp_host,
+        port: parseInt(settings.smtp_port) || 465,
+        secure: settings.smtp_secure === '1',
+        auth: {
+            user: settings.smtp_user,
+            pass: settings.smtp_pass
+        }
+    });
+};
+
+global.getSmtpFrom = () => {
+    try {
+        const row = db.prepare('SELECT key_value FROM server_settings WHERE key_name = "smtp_from"').get();
+        return row ? row.key_value : '"SOVEREIGN" <noreply@sovereigngame.local>';
+    } catch (err) {
+        return '"SOVEREIGN" <noreply@sovereigngame.local>';
+    }
+};
+
+// ─── Middleware ───
+app.use(helmet({
+    contentSecurityPolicy: false // disabled so inline scripts in game pages still work
+}));
+app.use(cors({
+    origin: function (origin, callback) {
+        callback(null, origin || '*');
+    },
+    credentials: true
+}));
+app.use(express.json({ limit: '1mb' }));
+
+// Serve static files from public directory
+app.use(express.static(path.join(__dirname, 'public')));
+
+// ─── Routes ───
+const authRoutes = require('./routes/auth');
+const apiRoutes = require('./routes/api');
+const adminRoutes = require('./routes/admin');
+
+app.use('/auth', authRoutes);
+app.use('/api', apiRoutes);
+app.use('/admin', adminRoutes);
+
+// Serve the game for any unmatched route
+app.use((req, res) => {
+    // If it looks like an API call (starts with /api/ or /auth/), don't serve index.html
+    if (req.path.startsWith('/api/') || req.path.startsWith('/auth/')) {
+        return res.status(404).json({ error: 'Endpoint not found' });
+    }
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+// ─── WebSocket Setup ───
+const { setupWebSocket } = require('./routes/ws');
+const wss = setupWebSocket(server);
+global.wss = wss;
+
+// ─── Turn Tick System ───
+const { processTick } = require('./game/tick');
+
+const TICK_INTERVAL_MS = 30 * 60 * 1000;
+// Check every minute if a tick is due
+setInterval(() => {
+    const lastTick = parseInt(db.prepare('SELECT value FROM game_state WHERE key = ?').get('last_tick')?.value || '0');
+    const now = Date.now();
+    if (now - lastTick >= TICK_INTERVAL_MS) {
+        console.log('[TICK] Processing world turn...');
+        processTick(db);
+        db.prepare('UPDATE game_state SET value = ? WHERE key = ?').run(String(now), 'last_tick');
+
+        // Notify all connected clients
+        if (global.wss) {
+            global.wss.clients.forEach(client => {
+                if (client.readyState === 1) {
+                    client.send(JSON.stringify({ type: 'tick', message: 'Turn processed' }));
+                }
+            });
+        }
+    }
+}, 60000);
+
+// Initialize last tick if first run
+const lastTick = db.prepare('SELECT value FROM game_state WHERE key = ?').get('last_tick');
+if (lastTick && lastTick.value === '0') {
+    db.prepare('UPDATE game_state SET value = ? WHERE key = ?').run(String(Date.now()), 'last_tick');
+}
+
+// ─── Start Server ───
+server.listen(PORT, () => {
+    console.log(`\n  🌐 SOVEREIGN Server running at http://localhost:${PORT}\n`);
+    console.log(`  📊 Database: ${dbPath}`);
+    console.log(`  ⏱️  Tick interval: ${TICK_INTERVAL_MS / 1000 / 60} minutes`);
+    console.log(`  🔌 WebSocket: ws://localhost:${PORT}\n`);
+});
+
+// Error logging to file
+const logStream = fs.createWriteStream(path.join(__dirname, 'server.log'), { flags: 'a' });
+process.on('uncaughtException', (err) => {
+    logStream.write(`[UNCAUGHT] ${new Date().toISOString()}: ${err.stack}\n`);
+});
+process.on('unhandledRejection', (reason, promise) => {
+    logStream.write(`[REJECTION] ${new Date().toISOString()}: ${reason}\n`);
+});
+
+module.exports = { app, db, server };
