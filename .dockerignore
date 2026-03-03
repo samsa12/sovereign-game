@@ -1,0 +1,12 @@
+node_modules
+.npm
+.git
+.gitignore
+Dockerfile
+.dockerignore
+fly.toml
+db/*.db
+db/*.db-shm
+db/*.db-wal
+server.log
+.env

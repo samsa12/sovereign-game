@@ -20,7 +20,10 @@ const server = http.createServer(app);
 const PORT = process.env.PORT || 3000;
 
 // ─── Database Setup ───
-const dbPath = path.join(__dirname, 'db', 'game.db');
+const dbPath = process.env.DB_PATH || path.join(__dirname, 'db', 'game.db');
+const dbDir = path.dirname(dbPath);
+if (!fs.existsSync(dbDir)) fs.mkdirSync(dbDir, { recursive: true });
+
 const db = new Database(dbPath);
 db.pragma('journal_mode = WAL');
 db.pragma('foreign_keys = ON');
