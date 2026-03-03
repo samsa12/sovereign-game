@@ -115,7 +115,7 @@ router.post('/nation', (req, res) => {
         const terrains = ['plains', 'mountain', 'forest', 'desert', 'coastal', 'urban'];
         const terrain = terrains[Math.floor(Math.random() * terrains.length)];
         db.prepare(`INSERT INTO cities (nation_id, name, is_capital, terrain, population, infrastructure, land)
-            VALUES (?, ?, 1, ?, 50000, 100, 250)`)
+            VALUES (?, ?, 1, ?, 8000, 100, 250)`)
             .run(nationId, name.split(' ').pop() + ' City', terrain);
 
         const cityId = db.prepare('SELECT id FROM cities WHERE nation_id = ? AND is_capital = 1').get(nationId).id;
@@ -339,11 +339,15 @@ router.post('/city/:cityId/improve', (req, res) => {
         const imp = GAME_DATA.improvements[improvementType];
         if (!imp) return res.status(400).json({ error: 'Invalid improvement.' });
 
-        // Infrastructure Limit Check (1 building per 10 infra)
+        // Smart City Limit Check (1 improvement requires 1 Land AND 1 Infra)
         const totalBuildings = db.prepare('SELECT SUM(quantity) as count FROM city_improvements WHERE city_id = ?').get(city.id).count || 0;
-        const infraLimit = Math.floor(city.infrastructure / 10);
-        if (totalBuildings >= infraLimit) {
-            return res.status(400).json({ error: `Infrastructure limit reached (${totalBuildings}/${infraLimit}). Buy more infrastructure.` });
+        const maxImps = Math.min(city.land || 100, city.infrastructure || 1);
+        if (totalBuildings >= maxImps) {
+            if (city.land <= city.infrastructure) {
+                return res.status(400).json({ error: `Not enough land (${totalBuildings}/${maxImps}). Buy more land.` });
+            } else {
+                return res.status(400).json({ error: `Not enough infrastructure (${totalBuildings}/${maxImps}). Buy more infrastructure.` });
+            }
         }
 
         if (nation.money < imp.cost) return res.status(400).json({ error: 'Not enough money.' });

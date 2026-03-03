@@ -357,16 +357,25 @@ function processNationTurn(db, nation, turn) {
         const approvalMod = nation.approval / 100;
         const diseasePenalty = Math.max(0.1, 1 - (city.disease / 100));
 
-        // Land Growth Bonus: +1% growth for every 500 units of land
-        const landGrowthBonus = 1 + (Math.floor(city.land / 500) * 0.01);
+        // Smart City Mechanics: Population cap based on Infrastructure and Space
+        const totalImps = db.prepare('SELECT SUM(quantity) as count FROM city_improvements WHERE city_id = ?').get(city.id).count || 0;
+        const maxPop = ((city.infrastructure || 1) * 100) - (totalImps * 50);
 
-        const growth = Math.floor(city.population * growthRate * approvalMod * diseasePenalty * landGrowthBonus);
-        let newPop = Math.max(1000, city.population + growth);
+        let newPop = city.population;
 
-        // Land serves as a physical density cap (1000 pop per sq km of land)
-        const maxPopInfra = city.infrastructure * 1000;
-        const maxPopLand = city.land * 1000;
-        newPop = Math.min(newPop, Math.min(maxPopInfra, maxPopLand));
+        if (city.population > maxPop) {
+            // Overpopulated: Citizens leave due to lack of housing infrastructure
+            const overpop = city.population - maxPop;
+            const flightRate = 0.05; // 5% leave per tick
+            newPop -= Math.floor(overpop * flightRate);
+            if (newPop < maxPop) newPop = maxPop;
+        } else {
+            // Normal Growth under the cap
+            const landGrowthBonus = 1 + (Math.floor(city.land / 500) * 0.01);
+            const growth = Math.floor(city.population * growthRate * approvalMod * diseasePenalty * landGrowthBonus);
+            newPop = Math.max(10, city.population + growth);
+            if (newPop > maxPop) newPop = maxPop; // Hard cap on normal growth
+        }
 
         // ─── CRIME, DISEASE, & POLLUTION DRIFT ───
 

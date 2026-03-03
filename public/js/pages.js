@@ -240,24 +240,31 @@ const Pages = {
 
     _renderCity(city) {
         const imps = city.improvements || {};
-        const maxImps = (city.infrastructure || 1) * 2;
         const currentImps = Object.values(imps).reduce((a, b) => a + b, 0);
+
+        // Smart City Mechanics
+        const maxImps = Math.min(city.land || 100, city.infrastructure || 1);
+        const maxPop = ((city.infrastructure || 1) * 100) - (currentImps * 50);
 
         return `
     <div class="stat-grid" style="margin-bottom:var(--space-lg)">
-        <div class="stat-card">
+        <div class="stat-card" style="position:relative">
             <div class="stat-label"><i class="fa-solid fa-users"></i> Population</div>
-            <div class="stat-value">${UI.fmtFull(city.population)}</div>
+            <div class="stat-value"><span style="color:${city.population > maxPop ? 'var(--danger)' : 'inherit'}">${UI.fmtFull(city.population)}</span><span style="color:var(--text-muted);font-size:0.8rem"> / ${UI.fmtFull(maxPop)}</span></div>
         </div>
         <div class="stat-card">
             <div class="stat-label"><i class="fa-solid fa-road"></i> Infrastructure</div>
             <div class="stat-value">${city.infrastructure || 1}</div>
         </div>
         <div class="stat-card">
-            <div class="stat-label"><i class="fa-solid fa-hammer"></i> Improvements</div>
-            <div class="stat-value"><span style="color:${currentImps >= maxImps ? 'var(--danger)' : 'inherit'}">${currentImps}</span><span style="color:var(--text-muted)"> / ${maxImps}</span></div>
+            <div class="stat-label"><i class="fa-solid fa-earth-americas"></i> Land Area</div>
+            <div class="stat-value">${city.land || 100}</div>
         </div>
         <div class="stat-card">
+            <div class="stat-label"><i class="fa-solid fa-hammer"></i> Improvements</div>
+            <div class="stat-value"><span style="color:${currentImps >= maxImps ? 'var(--danger)' : 'inherit'}">${currentImps}</span><span style="color:var(--text-muted)"> / ${maxImps}</span></div>
+            <div style="font-size:0.75rem;color:var(--text-muted);margin-top:4px">Bottleneck: ${city.land <= (city.infrastructure || 1) ? 'LAND' : 'INFRA'}</div>
+        </div>
             <div class="stat-label"><i class="fa-solid fa-expand"></i> Land</div>
             <div class="stat-value">${city.land}</div>
         </div>
