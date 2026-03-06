@@ -584,6 +584,9 @@ const DATA = {
         baseApproval: 60,
         newCityCost: 50000,
         cityInfrastructureCostPer: 100,
+        popCapPerInfra: 500,
+        popCapPerLand: 25,
+        popCapImpPenalty: 100,
         maxCities: 20,
         warScoreRange: 0.75,  // Can attack nations between 75% and 175% of your score
         spyBaseCost: 5000,

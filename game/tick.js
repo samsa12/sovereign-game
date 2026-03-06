@@ -357,9 +357,10 @@ function processNationTurn(db, nation, turn) {
         const approvalMod = nation.approval / 100;
         const diseasePenalty = Math.max(0.1, 1 - (city.disease / 100));
 
-        // Smart City Mechanics: Population cap based on Infrastructure and Space
+        // Smart City Mechanics: Population cap based on Infrastructure and Land
         const totalImps = db.prepare('SELECT SUM(quantity) as count FROM city_improvements WHERE city_id = ?').get(city.id).count || 0;
-        const maxPop = ((city.infrastructure || 1) * 100) - (totalImps * 50);
+        const b = GAME_DATA.balance;
+        const maxPop = Math.max(100, (city.infrastructure * b.popCapPerInfra) + (city.land * b.popCapPerLand) - (totalImps * b.popCapImpPenalty));
 
         let newPop = city.population;
 

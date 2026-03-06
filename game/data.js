@@ -188,6 +188,9 @@ const GAME_DATA = {
         maxCities: 999,
         newCityBaseCost: 50000,             // escalates: baseCost * 2^(cityCount-1)
         cityInfrastructureCostPer: 200,     // scales with current infra level
+        popCapPerInfra: 500,                // population capacity per unit of infrastructure
+        popCapPerLand: 25,                  // population capacity per unit of land
+        popCapImpPenalty: 100,              // population capacity lost per built improvement
         popGrowthRate: 0.02,
         baseApproval: 60,
         warScoreRange: 0.4,                 // min/max score ratio for declaring war

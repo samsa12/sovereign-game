@@ -242,9 +242,10 @@ const Pages = {
         const imps = city.improvements || {};
         const currentImps = Object.values(imps).reduce((a, b) => a + b, 0);
 
-        // Smart City Mechanics
+        // Smart City Mechanics: Population cap is based on BOTH infrastructure and land
+        const b = DATA.balance;
         const maxImps = Math.min(city.land || 100, city.infrastructure || 1);
-        const maxPop = ((city.infrastructure || 1) * 100) - (currentImps * 50);
+        const maxPop = Math.max(100, (city.infrastructure * b.popCapPerInfra) + (city.land * b.popCapPerLand) - (currentImps * b.popCapImpPenalty));
 
         return `
     <div class="stat-grid" style="margin-bottom:var(--space-lg)">
