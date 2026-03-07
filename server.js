@@ -128,7 +128,63 @@ global.wss = wss;
 const { processTick } = require('./game/tick');
 
 const TICK_INTERVAL_MS = 30 * 60 * 1000;
-// Check every minute if a tick is due
+// ─── Interactive CLI ───
+const readline = require('readline');
+const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+    terminal: true
+});
+
+const handleCommand = (line) => {
+    const cmd = line.trim().toLowerCase();
+    switch (cmd) {
+        case 'help':
+            console.log('\n--- Available Commands ---');
+            console.log('  help   - Show this help menu');
+            console.log('  tick   - Manually trigger a world tick');
+            console.log('  stats  - Show server stats');
+            console.log('  clear  - Clear terminal screen');
+            console.log('  exit   - Stop the server');
+            console.log('---------------------------\n');
+            break;
+        case 'tick':
+            console.log('[CLI] Manually triggered world tick...');
+            processTick(db);
+            db.prepare('UPDATE game_state SET value = ? WHERE key = ?').run(String(Date.now()), 'last_tick');
+            if (global.wss) {
+                global.wss.clients.forEach(c => c.readyState === 1 && c.send(JSON.stringify({ type: 'tick', message: 'Manual tick' })));
+            }
+            break;
+        case 'stats':
+            const mem = process.memoryUsage();
+            console.log('\n--- Server Stats ---');
+            console.log(`  Uptime:   ${Math.floor(process.uptime())}s`);
+            console.log(`  Memory:   ${Math.floor(mem.rss / 1024 / 1024)}MB RSS`);
+            console.log(`  Players:  ${global.wss ? global.wss.clients.size : 0} online`);
+            console.log('--------------------\n');
+            break;
+        case 'clear':
+            console.clear();
+            break;
+        case 'exit':
+        case 'stop':
+            console.log('🛑 Stopping server...');
+            process.exit(0);
+            break;
+        default:
+            if (cmd) console.log(`[CLI] Unknown command: "${cmd}". Type "help" for options.`);
+            break;
+    }
+};
+
+rl.on('line', (line) => {
+    handleCommand(line);
+}).on('close', () => {
+    process.exit(0);
+});
+
+// Start checking for ticks
 setInterval(() => {
     const lastTick = parseInt(db.prepare('SELECT value FROM game_state WHERE key = ?').get('last_tick')?.value || '0');
     const now = Date.now();

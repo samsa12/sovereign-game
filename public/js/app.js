@@ -326,6 +326,11 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // Mobile menu toggle
+    document.getElementById('menu-toggle')?.addEventListener('click', () => UI.toggleSidebar());
+    document.getElementById('sidebar-close')?.addEventListener('click', () => UI.closeSidebar());
+    document.getElementById('sidebar-overlay')?.addEventListener('click', () => UI.closeSidebar());
+
     // Modal close
     document.getElementById('modal-close')?.addEventListener('click', () => UI.closeModal());
     document.getElementById('modal-overlay')?.addEventListener('click', (e) => {

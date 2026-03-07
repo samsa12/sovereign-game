@@ -1167,8 +1167,10 @@ function recalcNationStats(nationId) {
     }
 
     const cityCount = cities.length;
+    // Score includes pop, military strength, city count and GDP
     const score = Math.floor(population / 100) + Math.floor(milStr / 10) + (cityCount * 50) + Math.floor(gdp / 100);
 
+    // Note: Stability and Approval are updated in game/tick.js to reflect turn-based changes
     db.prepare('UPDATE nations SET population = ?, military_strength = ?, gdp = ?, score = ? WHERE id = ?')
         .run(population, milStr, gdp, score, nationId);
 }
@@ -1530,14 +1532,22 @@ router.post('/messages/read', (req, res) => {
 router.get('/rankings', (req, res) => {
     try {
         const nations = db.prepare(`
-            SELECT n.id, n.name, n.leader_name, n.government, n.score, n.flag_pattern, n.flag_color1, n.flag_color2, n.flag_color3,
-                   (SELECT COUNT(*) FROM cities c WHERE c.nation_id = n.id) as city_count
+            SELECT 
+                n.id, n.name, n.leader_name, n.motto, n.government, n.score, 
+                n.population, n.military_strength, n.gdp, n.stability, n.import_reliance,
+                n.flag_pattern, n.flag_color1, n.flag_color2, n.flag_color3,
+                a.name as alliance_name,
+                (SELECT COUNT(*) FROM cities c WHERE c.nation_id = n.id) as city_count
             FROM nations n
+            LEFT JOIN alliances a ON n.alliance_id = a.id
             ORDER BY n.score DESC
             LIMIT 100
         `).all();
         res.json({ rankings: nations });
-    } catch (err) { res.status(500).json({ error: 'Server error' }); }
+    } catch (err) {
+        console.error('[API] Rankings error:', err);
+        res.status(500).json({ error: 'Server error' });
+    }
 });
 
 router.get('/news', (req, res) => {

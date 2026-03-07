@@ -12,6 +12,26 @@ const UI = {
             l.classList.toggle('active', l.dataset.page === page);
         });
         this.renderPage(page);
+        this.closeSidebar(); // Close on navigation (mobile)
+    },
+
+    toggleSidebar() {
+        const sidebar = document.getElementById('sidebar');
+        if (!sidebar) return;
+        if (window.innerWidth > 900) {
+            sidebar.classList.toggle('closed');
+        } else {
+            sidebar.classList.toggle('open');
+        }
+    },
+
+    closeSidebar() {
+        const sidebar = document.getElementById('sidebar');
+        if (!sidebar) return;
+        // Only trigger auto-close on mobile
+        if (window.innerWidth <= 900) {
+            sidebar.classList.remove('open');
+        }
     },
 
     renderPage(page) {

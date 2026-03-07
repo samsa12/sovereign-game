@@ -485,6 +485,34 @@ function processNationTurn(db, nation, turn) {
     else if (approval < 50) stability -= 10;
     stability -= activeWars * GAME_DATA.balance.warExhaustionStability;
     if (nation.money <= 0) stability -= 10;
+
+    // --- Harder / Realistic Factors ---
+    // 1. Corruption & Decay (Crime / Infrastructure)
+    let avgCrime = 0, avgPollution = 0, avgInfra = 0;
+    for (const city of cities) {
+        avgCrime += (city.crime || 0);
+        avgPollution += (city.pollution || 0);
+        avgInfra += (city.infrastructure || 0);
+    }
+    if (cities.length > 0) {
+        avgCrime /= cities.length;
+        avgPollution /= cities.length;
+        avgInfra /= cities.length;
+    }
+
+    // Low infra relative to population causes unrest
+    // Penalty scale: -1 Stability per 20,000 unhoused/unsupported citizens
+    const infraPressure = Math.max(0, (totalPop / 2000) - avgInfra);
+    stability -= Math.floor(infraPressure / 2);
+
+    stability -= Math.floor(avgCrime / 4); // High crime = instability
+    stability -= Math.floor(avgPollution / 6); // High pollution = unrest
+
+    // 2. Resource Dependency (Import Reliance)
+    // If you can't feed or power your nation locally, the state is fragile.
+    if (importReliance > 50) stability -= 10;
+    if (importReliance > 80) stability -= 10;
+
     stability = Math.max(0, Math.min(100, Math.round(stability)));
 
     db.prepare('UPDATE nations SET approval = ?, stability = ? WHERE id = ?').run(approval, stability, nation.id);
@@ -525,8 +553,22 @@ function processNationTurn(db, nation, turn) {
     let gdp = Math.floor(newPop * 0.5) + totalCommerce;
     const score = Math.floor(newPop / 100) + Math.floor(milStr / 10) + (cities.length * 50) + Math.floor(gdp / 100);
 
-    db.prepare('UPDATE nations SET population = ?, military_strength = ?, gdp = ?, score = ?, last_turn_processed = ? WHERE id = ?')
-        .run(newPop, milStr, gdp, score, turn, nation.id);
+    // ─── IMPORT RELIANCE ───
+    let totalNeeded = 0;
+    let totalDeficit = 0;
+    const resTypes = ['food', 'steel', 'oil', 'aluminum', 'munitions', 'uranium', 'rare', 'iron', 'bauxite'];
+    for (const r of resTypes) {
+        const cons = (consumption[r] || 0);
+        const prod = (production[r] || 0);
+        if (cons > 0) {
+            totalNeeded += cons;
+            if (prod < cons) totalDeficit += (cons - prod);
+        }
+    }
+    const importReliance = totalNeeded > 0 ? Math.max(0, Math.min(100, Math.round((totalDeficit / totalNeeded) * 100))) : 0;
+
+    db.prepare('UPDATE nations SET population = ?, military_strength = ?, gdp = ?, score = ?, last_turn_processed = ?, import_reliance = ? WHERE id = ?')
+        .run(newPop, milStr, gdp, score, turn, importReliance, nation.id);
 
     // ─── STORE INCOME BREAKDOWN (for UI) ───
     const breakdown = JSON.stringify({

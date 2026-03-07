@@ -636,6 +636,98 @@ const Pages = {
         }).join('')}`;
     },
 
+    // ═══ NATION TAB (Detailed Overview) ═══
+    nation() {
+        const s = App.state;
+        if (!s || !s.nation) return;
+        const n = s.nation;
+        const cities = s.cities || [];
+        const military = s.military || {};
+
+        const totalPop = cities.reduce((sum, c) => sum + (c.population || 0), 0);
+        const totalLand = cities.reduce((sum, c) => sum + (c.land || 0), 0);
+        const totalInfra = cities.reduce((sum, c) => sum + (c.infrastructure || 0), 0);
+
+        document.getElementById('content').innerHTML = `
+        <div class="page-header">
+            <div>
+                <h1 class="page-title"><i class="fa-solid fa-flag"></i> ${n.name || 'NATION'}</h1>
+                <p class="page-subtitle">${n.motto || 'NO MOTTO SET'}</p>
+            </div>
+            <div>${UI.renderFlagSVG(n, 120, 80)}</div>
+        </div>
+
+        <div class="grid-2">
+            <!-- Left Column: Nation Info -->
+            <div class="card">
+                <div class="card-header"><span class="card-title"><i class="fa-solid fa-info-circle"></i> Nation Information</span></div>
+                <div class="ledger-list">
+                    <div class="ledger-row"><span class="ledger-label">Leader</span><span class="ledger-value">${n.leader_title || 'Leader'} ${n.leader_name}</span></div>
+                    <div class="ledger-row"><span class="ledger-label">Government</span><span class="ledger-value">${DATA.governments[n.government]?.name || n.government}</span></div>
+                    <div class="ledger-row"><span class="ledger-label">Alliance</span><span class="ledger-value" style="color:var(--accent); font-weight:600">${s.alliance?.name || 'Independent'}</span></div>
+                    <div class="ledger-row"><span class="ledger-label">Continent</span><span class="ledger-value" style="text-transform:capitalize">${n.continent.replace('_', ' ')}</span></div>
+                    <div class="ledger-row"><span class="ledger-label">Capital</span><span class="ledger-value">${cities.find(c => c.is_capital)?.name || 'None'}</span></div>
+                    <div class="ledger-row"><span class="ledger-label">Founded</span><span class="ledger-value">${new Date(n.created_at).toLocaleDateString()}</span></div>
+                </div>
+
+                <div class="card-header" style="margin-top:var(--space-lg)"><span class="card-title"><i class="fa-solid fa-chart-line"></i> National Stats</span></div>
+                <div class="stat-grid">
+                    <div class="stat-card">
+                        <div class="stat-label">Population</div>
+                        <div class="stat-value">${UI.fmt(totalPop)}</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">GDP</div>
+                        <div class="stat-value">$${UI.fmt(n.gdp || 0)}</div>
+                    </div>
+                </div>
+                <div class="stat-grid" style="margin-top:var(--space-md)">
+                    <div class="stat-card">
+                        <div class="stat-label">Stability</div>
+                        <div class="stat-value" style="color:${n.stability > 70 ? 'var(--success)' : 'var(--danger)'}">${n.stability || 0}%</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Approval</div>
+                        <div class="stat-value" style="color:${n.approval > 70 ? 'var(--success)' : 'var(--danger)'}">${n.approval || 0}%</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Geography & Military -->
+            <div class="card">
+                <div class="card-header"><span class="card-title"><i class="fa-solid fa-earth-americas"></i> Geography</span></div>
+                <div class="ledger-list">
+                    <div class="ledger-row"><span class="ledger-label">Total Land</span><span class="ledger-value">${UI.fmtFull(totalLand)} sq. mi</span></div>
+                    <div class="ledger-row"><span class="ledger-label">Infrastructure</span><span class="ledger-value">${UI.fmtFull(totalInfra)} Units</span></div>
+                    <div class="ledger-row"><span class="ledger-label">Cities</span><span class="ledger-value">${cities.length} / ${DATA.balance.maxCities}</span></div>
+                </div>
+
+                <div class="card-header" style="margin-top:var(--space-lg)"><span class="card-title"><i class="fa-solid fa-shield-halved"></i> Military Strength</span></div>
+                <div class="ledger-list">
+                    <div class="ledger-row"><span class="ledger-label">Power Score</span><span class="ledger-value" style="color:var(--accent)">${UI.fmtFull(n.military_strength || 0)}</span></div>
+                    <div class="ledger-row"><span class="ledger-label">Active Units</span><span class="ledger-value">${UI.fmtFull(Object.values(military).reduce((a, b) => a + b, 0))}</span></div>
+                    <div class="ledger-row"><span class="ledger-label">War Policy</span><span class="ledger-value" style="text-transform:capitalize">${n.war_policy || 'Normal'}</span></div>
+                </div>
+
+                <div style="margin-top:var(--space-lg); padding:var(--space-md); background:var(--bg-tertiary); border:1px solid var(--border-color)">
+                    <div style="font-family:var(--font-condensed); font-size:0.75rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:1px; margin-bottom:var(--space-sm)">Regional Influence</div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar-fill" style="width:${Math.min(100, (n.score / 1000) * 100)}%; background:var(--accent)"></div>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; margin-top:4px; font-family:var(--font-condensed); font-size:0.7rem; color:var(--accent)">
+                        <span>GLOBAL SCORE</span>
+                        <span>${UI.fmt(n.score || 0)}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card" style="margin-top:var(--space-lg)">
+            <div class="card-header"><span class="card-title"><i class="fa-solid fa-scroll"></i> National Biography</span></div>
+            <p style="color:var(--text-secondary); line-height:1.6; font-size:0.9rem">${n.bio || 'This nation has not set a biography yet. Edit your nation settings to add one.'}</p>
+        </div>`;
+    },
+
     async _recruit(unitType) {
         const input = document.getElementById('recruit-' + unitType);
         const amount = parseInt(input?.value) || 100;

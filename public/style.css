@@ -699,7 +699,7 @@ button {
     padding: 0 var(--space-md);
     position: sticky;
     top: 0;
-    z-index: 100;
+    z-index: 2000;
 }
 
 .top-bar-left {
@@ -707,6 +707,21 @@ button {
     align-items: center;
     gap: var(--space-md);
     min-width: 200px;
+}
+
+.menu-toggle {
+    display: block;
+    background: none;
+    border: none;
+    color: var(--text-heading);
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 10px;
+    margin-right: var(--space-sm);
+}
+
+.menu-toggle:hover {
+    color: var(--accent);
 }
 
 .top-bar-center {
@@ -857,6 +872,35 @@ button {
     flex-direction: column;
     overflow-y: auto;
     padding: var(--space-md) 0;
+    transition: transform 0.3s ease, width 0.3s ease;
+}
+
+.sidebar-header-mobile {
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-md);
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: var(--space-sm);
+}
+
+.logo-text-mobile {
+    font-family: var(--font-heading);
+    font-size: 1.2rem;
+    color: var(--text-heading);
+    letter-spacing: 2px;
+}
+
+.sidebar-close {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+
+.sidebar-close:hover {
+    color: var(--danger);
 }
 
 .sidebar-section {
@@ -1605,6 +1649,74 @@ button {
     font-family: var(--font-condensed);
     font-weight: 700;
     font-size: 0.85rem;
+}
+
+/* ─── MOBILE RESPONSIVE ─── */
+@media (max-width: 900px) {
+    .menu-toggle {
+        display: block;
+    }
+
+    .top-bar-left,
+    .top-bar-right {
+        min-width: auto;
+    }
+
+    .sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        transform: translateX(-100%);
+        box-shadow: 20px 0 50px rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+    }
+
+    .sidebar.open {
+        transform: translateX(0);
+    }
+
+    .sidebar.open~.sidebar-overlay {
+        display: block;
+    }
+
+    .sidebar-header-mobile {
+        display: flex;
+    }
+
+    .main-layout {
+        position: relative;
+    }
+
+    .top-bar-center {
+        display: none;
+        /* Hide resource bar on very small screens or let it scroll? index.html has overflow-x auto */
+    }
+}
+
+@media (min-width: 901px) {
+    .sidebar.closed {
+        width: 0;
+        min-width: 0;
+        padding-left: 0;
+        padding-right: 0;
+        overflow: hidden;
+        border-right: none;
+    }
+}
+
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 900;
+}
+
+@media (max-width: 600px) {
+    .top-bar-center {
+        display: none;
+    }
 }
 
 /* ═══════════════════════════════════════════════════════════════

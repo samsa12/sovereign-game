@@ -224,6 +224,9 @@
 
         <header class="top-bar">
             <div class="top-bar-left">
+                <button class="menu-toggle" id="menu-toggle">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
                 <div class="game-logo">
                     <i class="fa-solid fa-earth-americas logo-icon-sm"></i>
                     <span class="logo-text">SOVEREIGN</span>
@@ -251,10 +254,16 @@
         <div class="main-layout">
 
             <nav class="sidebar" id="sidebar">
+                <div class="sidebar-header-mobile">
+                    <span class="logo-text-mobile">SOVEREIGN</span>
+                    <button class="sidebar-close" id="sidebar-close">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
                 <div class="sidebar-section">
                     <span class="sidebar-section-title">Nation</span>
-                    <a class="sidebar-link active" data-page="dashboard" href="#">
-                        <span class="sidebar-icon"><i class="fa-solid fa-chart-line"></i></span> Dashboard
+                    <a class="sidebar-link active" data-page="nation" href="#">
+                        <span class="sidebar-icon"><i class="fa-solid fa-flag"></i></span> Nation
                     </a>
                     <a class="sidebar-link" data-page="cities" href="#">
                         <span class="sidebar-icon"><i class="fa-solid fa-city"></i></span> Cities
@@ -318,6 +327,7 @@
                     </a>
                 </div>
             </nav>
+            <div class="sidebar-overlay" id="sidebar-overlay"></div>
 
             <main class="content" id="content"></main>
         </div>

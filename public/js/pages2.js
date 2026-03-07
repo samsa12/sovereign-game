@@ -313,21 +313,50 @@ Object.assign(Pages, {
         const nations = data.rankings || data.nations || [];
 
         content.innerHTML = `
-        <div class="page-header"><h1 class="page-title"><i class="fa-solid fa-ranking-star"></i> World Rankings</h1></div>
-        <div class="card">
+        <div class="page-header" style="flex-direction:column; align-items:flex-start; gap:var(--space-xs)">
+            <h1 class="page-title"><i class="fa-solid fa-ranking-star"></i> World Rankings</h1>
+            <p class="page-subtitle">Ranked by score // Global influence metrics</p>
+        </div>
+
+        <div class="card" style="padding:0; overflow-x:auto">
             <table class="data-table">
-                <thead><tr><th>#</th><th>Nation</th><th>Leader</th><th>Score</th><th>Cities</th><th>Gov</th><th></th><th></th></tr></thead>
+                <thead>
+                    <tr style="background:var(--bg-tertiary)">
+                        <th style="width:40px">#</th>
+                        <th>NATION</th>
+                        <th>ALLIANCE</th>
+                        <th>POPULATION</th>
+                        <th>TOTAL GDP</th>
+                        <th>MIL PWR</th>
+                        <th>STAB (%)</th>
+                        <th>IMP. RELIANCE (%)</th>
+                        <th style="width:100px; text-align:right"></th>
+                    </tr>
+                </thead>
                 <tbody>
                     ${nations.map((nat, i) => `
                     <tr>
                         <td class="rank">${i + 1}</td>
-                        <td><strong>${nat.name}</strong></td>
-                        <td>${nat.leader_name || '—'}</td>
-                        <td>${UI.fmt(nat.score || 0)}</td>
-                        <td>${nat.city_count || 0}</td>
-                        <td>${DATA.governments[nat.government]?.name || nat.government || '—'}</td>
-                        <td><button class="btn btn-ghost btn-sm" onclick="Pages._viewNation(${nat.id})"><i class="fa-solid fa-eye"></i></button></td>
-                        <td><button class="btn btn-ghost btn-sm" onclick="Pages._openChat(${nat.id})" title="Message"><i class="fa-solid fa-comment"></i></button></td>
+                        <td style="min-width:180px">
+                            <div style="font-family:var(--font-heading); font-size:1.1rem; color:var(--text-heading); letter-spacing:1px">${nat.name}</div>
+                            <div style="font-family:var(--font-condensed); font-size:0.7rem; color:var(--text-muted); letter-spacing:1px; margin-top:2px">
+                                ID: #${nat.id} | ${nat.leader_name}
+                            </div>
+                        </td>
+                        <td style="color:var(--accent); font-weight:600; letter-spacing:0.5px">${nat.alliance_name || '—'}</td>
+                        <td style="font-family:var(--font-condensed); letter-spacing:0.5px">${UI.fmtFull(nat.population || 0).replace(/,/g, '.')}</td>
+                        <td style="font-family:var(--font-condensed); color:var(--success); font-weight:bold">$${UI.fmt(nat.gdp || 0).toLowerCase()}</td>
+                        <td style="font-family:var(--font-condensed); letter-spacing:0.5px">${UI.fmtFull(nat.military_strength || 0).replace(/,/g, '.')}</td>
+                        <td style="font-family:var(--font-condensed); color:var(--success)">${nat.stability || 100}%</td>
+                        <td style="font-family:var(--font-condensed); color:var(--success)">${nat.import_reliance || 0}%</td>
+                        <td style="text-align:right; white-space:nowrap">
+                            <button class="btn btn-ghost btn-sm" onclick="Pages._viewNation(${nat.id})" title="View Nation">
+                                <i class="fa-solid fa-eye" style="opacity:0.6"></i>
+                            </button>
+                            <button class="btn btn-ghost btn-sm" onclick="Pages._openChat(${nat.id})" title="Message">
+                                <i class="fa-solid fa-comment" style="opacity:0.6"></i>
+                            </button>
+                        </td>
                     </tr>`).join('')}
                 </tbody>
             </table>
