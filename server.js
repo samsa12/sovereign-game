@@ -13,12 +13,16 @@ const Database = require('better-sqlite3');
 const fs = require('fs');
 const nodemailer = require('nodemailer');
 const compression = require('compression');
+const rateLimit = require('express-rate-limit');
 const { GAME_DATA } = require('./game/data');
 
 // Create Express app
 const app = express();
 const server = http.createServer(app);
 const PORT = process.env.PORT || 3000;
+
+// Minify JSON responses (remove pretty-printing)
+app.set('json spaces', 0);
 
 // ─── Network Usage Tracker ───
 global.networkUsage = {
@@ -130,16 +134,26 @@ app.use((req, res, next) => {
     next();
 });
 
-// Serve static files from public directory
-app.use(express.static(path.join(__dirname, 'public')));
+// Serve static files with long-term caching (7 days)
+app.use(express.static(path.join(__dirname, 'public'), {
+    maxAge: '7d',
+    immutable: true
+}));
 
 // ─── Routes ───
 const authRoutes = require('./routes/auth');
 const apiRoutes = require('./routes/api');
 const adminRoutes = require('./routes/admin');
 
+// Rate Limiting: 150 requests per 10 minutes from any IP
+const limiter = rateLimit({
+    windowMs: 10 * 60 * 1000,
+    max: 150,
+    message: { error: "Too many requests from this IP, please try again later." }
+});
+
 app.use('/auth', authRoutes);
-app.use('/api', apiRoutes);
+app.use('/api', limiter, apiRoutes); // Apply limiter only to game actions
 app.use('/admin', adminRoutes);
 
 // Serve the game for any unmatched route
