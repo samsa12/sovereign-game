@@ -394,7 +394,7 @@ const Pages = {
                         <div class="building-card-header">
                             <div class="building-icon"><i class="fa-solid ${icon}"></i></div>
                             <div class="building-info">
-                                <div class="building-name">${imp.name}${type === 'wind_farm' ? ' (v2.7)' : ''}</div>
+                                <div class="building-name">${imp.name}</div>
                                 <div class="building-price">$${UI.fmt(imp.cost)} ${owned > 0 ? `<span style="color:var(--text-muted)">(${owned}/${maxQty})</span>` : ''}</div>
                             </div>
                         </div>
@@ -402,7 +402,7 @@ const Pages = {
                         ${imp.produces ? `<div style="font-size:0.7rem;color:var(--success);font-family:var(--font-condensed)"><i class="fa-solid fa-arrow-up"></i> +${imp.rate} ${imp.produces}/turn</div>` : ''}
                         ${imp.commerce ? `<div style="font-size:0.7rem;color:var(--success);font-family:var(--font-condensed)"><i class="fa-solid fa-dollar-sign"></i> +$${imp.commerce}/turn</div>` : ''}
                         ${imp.power ? `<div style="font-size:0.7rem;color:var(--accent);font-family:var(--font-condensed)"><i class="fa-solid fa-bolt"></i> +${imp.power} MW</div>` : ''}
-                        ${imp.powerUsage ? `<div style="font-size:0.7rem;color:var(--danger);font-family:var(--font-condensed)"><i class="fa-solid fa-plug"></i> -${imp.powerUsage} MW</div>` : ''}
+                        ${imp.powerUsage ? `<div style="font-size:0.7rem;color:var(--danger);font-family:var(--font-condensed)"><i class="fa-solid fa-plug"></i> -${Math.round(imp.powerUsage * 1.5)} MW</div>` : ''}
                         ${imp.pollution ? `<div style="font-size:0.7rem;color:${imp.pollution > 0 ? 'var(--danger)' : 'var(--success)'};font-family:var(--font-condensed)"><i class="fa-solid fa-smog"></i> ${imp.pollution > 0 ? '+' : ''}${imp.pollution} pollution</div>` : ''}
                         ${imp.approval ? `<div style="font-size:0.7rem;color:var(--success);font-family:var(--font-condensed)"><i class="fa-solid fa-face-smile"></i> +${imp.approval} approval</div>` : ''}
                         <button class="btn btn-primary btn-sm building-action" onclick="Pages._buildImprovement(${city.id},'${type}')">BUILD</button>
