@@ -151,7 +151,7 @@ const DATA = {
         coal_plant: { name: 'Coal Power Plant', category: 'power', icon: '🏭', cost: 5000, power: 1200, pollution: 20, maxPerCity: 5, desc: 'Generates power from coal. Causes pollution.' },
         oil_plant: { name: 'Oil Power Plant', category: 'power', icon: '⚡', cost: 7000, power: 2000, pollution: 15, maxPerCity: 3, desc: 'Efficient power from oil refining.' },
         nuclear_plant: { name: 'Nuclear Power Plant', category: 'power', icon: '☢️', cost: 30000, power: 8000, pollution: 0, maxPerCity: 1, requires: 'uranium', desc: 'Clean enormous energy. Requires uranium.' },
-        wind_farm: { name: 'Wind Farm', category: 'power', icon: '💨', cost: 8000, power: 600, pollution: 0, maxPerCity: 50, desc: 'Clean but moderate power output.' },
+        wind_farm: { name: 'Wind Farm', category: 'power', icon: '💨', cost: 8001, power: 600, pollution: 0, maxPerCity: 50, desc: 'Zero emission, clean power grid.' },
 
         // Resource Production
         farm: { name: 'Farm', category: 'resource', icon: '🌾', cost: 1500, produces: 'food', rate: 50, maxPerCity: 5, desc: 'Produces food to feed your population.' },

@@ -374,12 +374,13 @@ const Pages = {
                         const imp = DATA.improvements[type];
                         const icon = IMP_ICONS[type] || 'fa-building';
                         const owned = imps[type] || 0;
-                        const maxQty = imp.maxPerCity || 999;
+                        let maxQty = imp.maxPerCity || 999;
+                        if (type === 'wind_farm') maxQty = 50;
                         return `<div class="building-card">
                         <div class="building-card-header">
                             <div class="building-icon"><i class="fa-solid ${icon}"></i></div>
                             <div class="building-info">
-                                <div class="building-name">${imp.name}</div>
+                                <div class="building-name">${imp.name}${type === 'wind_farm' ? ' (v2.7)' : ''}</div>
                                 <div class="building-price">$${UI.fmt(imp.cost)} ${owned > 0 ? `<span style="color:var(--text-muted)">(${owned}/${maxQty})</span>` : ''}</div>
                             </div>
                         </div>
