@@ -400,6 +400,7 @@ const Pages = {
                         </div>
                         <div style="font-size:0.7rem;color:var(--text-muted);margin:4px 0;font-family:var(--font-condensed)">${imp.desc || ''}</div>
                         ${imp.produces ? `<div style="font-size:0.7rem;color:var(--success);font-family:var(--font-condensed)"><i class="fa-solid fa-arrow-up"></i> +${imp.rate} ${imp.produces}/turn</div>` : ''}
+                        ${imp.consumes ? Object.entries(imp.consumes).map(([res, qty]) => `<div style="font-size:0.7rem;color:var(--danger);font-family:var(--font-condensed)"><i class="fa-solid fa-arrow-down"></i> -${qty} ${res}/turn</div>`).join('') : ''}
                         ${imp.commerce ? `<div style="font-size:0.7rem;color:var(--success);font-family:var(--font-condensed)"><i class="fa-solid fa-dollar-sign"></i> +$${imp.commerce}/turn</div>` : ''}
                         ${imp.power ? `<div style="font-size:0.7rem;color:var(--accent);font-family:var(--font-condensed)"><i class="fa-solid fa-bolt"></i> +${imp.power} MW</div>` : ''}
                         ${imp.powerUsage ? `<div style="font-size:0.7rem;color:var(--danger);font-family:var(--font-condensed)"><i class="fa-solid fa-plug"></i> -${Math.round(imp.powerUsage * 1.5)} MW</div>` : ''}
