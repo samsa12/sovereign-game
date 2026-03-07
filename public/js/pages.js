@@ -295,6 +295,17 @@ const Pages = {
         const maxImps = Math.min(city.land || 100, city.infrastructure || 1, 40);
         const maxPop = Math.max(100, (city.infrastructure * b.popCapPerInfra) + (city.land * b.popCapPerLand) - (currentImps * b.popCapImpPenalty));
 
+        // Power calculation
+        let totalPowerProduced = 0;
+        let totalPowerUsed = 0;
+        Object.entries(imps).forEach(([type, qty]) => {
+            const impDef = DATA.improvements[type];
+            if (impDef) {
+                if (impDef.power) totalPowerProduced += (impDef.power * qty);
+                if (impDef.powerUsage) totalPowerUsed += (impDef.powerUsage * qty);
+            }
+        });
+
         return `
     <div class="stat-grid" style="margin-bottom:var(--space-lg)">
         <div class="stat-card" style="position:relative">
@@ -324,6 +335,11 @@ const Pages = {
         <div class="stat-card" style="border-left-color:${(city.happiness || 0) > 50 ? '#27ae60' : '#c0392b'}">
             <div class="stat-label"><i class="fa-solid fa-face-smile"></i> Happiness</div>
             <div class="stat-value">${Math.round(city.happiness || 0)}%</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label"><i class="fa-solid fa-bolt"></i> Power Grid</div>
+            <div class="stat-value"><span style="color:${totalPowerUsed > totalPowerProduced ? 'var(--danger)' : 'var(--accent)'}">${UI.fmtFull(totalPowerUsed)} MW</span></div>
+            <div style="font-size:0.75rem;color:var(--text-muted);margin-top:4px">GEN: ${UI.fmtFull(totalPowerProduced)} MW</div>
         </div>
         <div class="stat-card" style="border-left-color:#c0392b">
             <div class="stat-label"><i class="fa-solid fa-mask"></i> Crime</div>
