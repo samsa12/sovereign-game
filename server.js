@@ -19,6 +19,12 @@ const app = express();
 const server = http.createServer(app);
 const PORT = process.env.PORT || 3000;
 
+// ─── Network Usage Tracker ───
+global.networkUsage = {
+    received: 0,
+    sent: 0
+};
+
 // ─── Database Setup ───
 const dbPath = process.env.DB_PATH || path.join(__dirname, 'db', 'game.db');
 const dbDir = path.dirname(dbPath);
@@ -98,6 +104,30 @@ app.use(cors({
 }));
 app.use(express.json({ limit: '1mb' }));
 
+// Track HTTP traffic
+app.use((req, res, next) => {
+    // Track incoming (approximate header size + content length)
+    const headerSize = (req.method + req.url + req.httpVersion).length +
+        Object.entries(req.headers).reduce((acc, [k, v]) => acc + k.length + (v ? String(v).length : 0), 0);
+    const bodySize = parseInt(req.headers['content-length'] || '0');
+    global.networkUsage.received += headerSize + bodySize;
+
+    // Track outgoing by wrapping res.write and res.end
+    const originalWrite = res.write;
+    const originalEnd = res.end;
+
+    res.write = function (chunk) {
+        if (chunk) global.networkUsage.sent += chunk.length || 0;
+        return originalWrite.apply(res, arguments);
+    };
+
+    res.end = function (chunk) {
+        if (chunk) global.networkUsage.sent += chunk.length || 0;
+        return originalEnd.apply(res, arguments);
+    };
+    next();
+});
+
 // Serve static files from public directory
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -158,10 +188,19 @@ const handleCommand = (line) => {
             break;
         case 'stats':
             const mem = process.memoryUsage();
+            const formatBytes = (bytes) => {
+                if (bytes === 0) return '0 B';
+                const k = 1024;
+                const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
+                const i = Math.floor(Math.log(bytes) / Math.log(k));
+                return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+            };
+
             console.log('\n--- Server Stats ---');
             console.log(`  Uptime:   ${Math.floor(process.uptime())}s`);
             console.log(`  Memory:   ${Math.floor(mem.rss / 1024 / 1024)}MB RSS`);
             console.log(`  Players:  ${global.wss ? global.wss.clients.size : 0} online`);
+            console.log(`  Network:  ⬇️ ${formatBytes(global.networkUsage.received)} | ⬆️ ${formatBytes(global.networkUsage.sent)}`);
             console.log('--------------------\n');
             break;
         case 'clear':

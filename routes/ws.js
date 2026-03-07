@@ -49,6 +49,9 @@ function setupWebSocket(server) {
         ws.on('pong', () => { ws.isAlive = true; });
 
         ws.on('message', (data) => {
+            // Track incoming WebSocket data
+            if (global.networkUsage) global.networkUsage.received += data.length || 0;
+
             try {
                 const msg = JSON.parse(data);
                 // Handle client messages if needed
@@ -57,6 +60,13 @@ function setupWebSocket(server) {
                 }
             } catch (e) { /* ignore */ }
         });
+
+        // Track outgoing WebSocket data
+        const originalSend = ws.send;
+        ws.send = function (data) {
+            if (global.networkUsage) global.networkUsage.sent += data.length || 0;
+            return originalSend.apply(this, arguments);
+        };
 
         ws.on('close', () => {
             if (ws.userId) {
