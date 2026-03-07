@@ -89,6 +89,12 @@ const Pages = {
         const income = s.incomeBreakdown || {};
         const totalPop = cities.reduce((sum, c) => sum + (c.population || 0), 0);
         const totalMil = Object.values(military).reduce((sum, qty) => sum + qty, 0);
+        const totalLand = cities.reduce((sum, c) => sum + (c.land || 0), 0);
+        const totalInfra = cities.reduce((sum, c) => sum + (c.infrastructure || 0), 0);
+        const totalStr = Object.entries(military).reduce((sum, [t, q]) => {
+            const def = DATA.units?.[t];
+            return sum + (def ? q * def.strength : 0);
+        }, 0);
 
         document.getElementById('content').innerHTML = `
         <div class="page-header">
@@ -122,6 +128,7 @@ const Pages = {
         </div>
 
         <div class="grid-2" style="margin-top:var(--space-lg)">
+            <!-- Left: Health -->
             <div class="card">
                 <div class="card-header"><span class="card-title"><i class="fa-solid fa-heart-pulse"></i> Nation Health</span></div>
                 <div style="display:grid;gap:var(--space-md)">
@@ -133,6 +140,8 @@ const Pages = {
                     ${this._natAvg(cities, 'pollution', 'Avg Pollution', '#5a6a7e')}
                 </div>
             </div>
+
+            <!-- Right: Cities -->
             <div class="card">
                 <div class="card-header"><span class="card-title"><i class="fa-solid fa-city"></i> Cities</span></div>
                 ${cities.length === 0 ? '<p style="color:var(--text-muted)">No cities established.</p>' :
@@ -146,6 +155,45 @@ const Pages = {
                             POP ${UI.fmt(c.population)} // INFRA ${c.infrastructure} // <i class="fa-solid fa-face-smile" style="color:${(c.happiness || 0) > 50 ? '#27ae60' : '#c0392b'}"></i> ${Math.round(c.happiness || 0)}%
                         </div>
                     </div>`).join('')}
+            </div>
+        </div>
+
+        <div class="grid-2" style="margin-top:var(--space-lg)">
+            <!-- Left: Nation Info -->
+            <div class="card">
+                <div class="card-header"><span class="card-title"><i class="fa-solid fa-info-circle"></i> Nation Information</span></div>
+                <div class="ledger-list">
+                    <div class="ledger-row"><span class="ledger-label">Government</span><span class="ledger-value">${DATA.governments[n.government]?.name || n.government}</span></div>
+                    <div class="ledger-row"><span class="ledger-label">Alliance</span><span class="ledger-value" style="color:var(--accent); font-weight:600">${s.alliance?.name || 'Independent'}</span></div>
+                    <div class="ledger-row"><span class="ledger-label">Continent</span><span class="ledger-value" style="text-transform:capitalize">${(n.continent || '').replace('_', ' ')}</span></div>
+                    <div class="ledger-row"><span class="ledger-label">Founded</span><span class="ledger-value">${new Date(n.created_at).toLocaleDateString()}</span></div>
+                </div>
+                <div style="margin-top:var(--space-md); padding-top:var(--space-md); border-top:1px solid var(--border-color)">
+                    <div class="card-header" style="padding:0; margin-bottom:var(--space-sm)"><span class="card-title" style="font-size:0.8rem"><i class="fa-solid fa-scroll"></i> Bio</span></div>
+                    <p style="color:var(--text-secondary); line-height:1.4; font-size:0.8rem; margin:0">${n.bio || 'No biography set.'}</p>
+                </div>
+            </div>
+
+            <!-- Right: Geography & Military -->
+            <div class="card">
+                <div class="card-header"><span class="card-title"><i class="fa-solid fa-earth-americas"></i> Geography & Defense</span></div>
+                <div class="ledger-list">
+                    <div class="ledger-row"><span class="ledger-label">Total Land</span><span class="ledger-value">${UI.fmtFull(totalLand)} sq. mi</span></div>
+                    <div class="ledger-row"><span class="ledger-label">Infrastructure</span><span class="ledger-value">${UI.fmtFull(totalInfra)} Units</span></div>
+                    <div class="ledger-row"><span class="ledger-label">Power Score</span><span class="ledger-value" style="color:var(--accent)">${UI.fmtFull(totalStr)}</span></div>
+                    <div class="ledger-row"><span class="ledger-label">War Policy</span><span class="ledger-value" style="text-transform:capitalize">${n.war_policy || 'Normal'}</span></div>
+                </div>
+
+                <div style="margin-top:var(--space-lg); padding:var(--space-md); background:var(--bg-tertiary); border:1px solid var(--border-color)">
+                    <div style="font-family:var(--font-condensed); font-size:0.75rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:1px; margin-bottom:var(--space-sm)">Regional Influence</div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar-fill" style="width:${Math.min(100, (n.score / 100000) * 100)}%; background:var(--accent)"></div>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; margin-top:4px; font-family:var(--font-condensed); font-size:0.7rem; color:var(--accent)">
+                        <span>GLOBAL SCORE</span>
+                        <span>${UI.fmt(n.score || 0)}</span>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -712,7 +760,7 @@ const Pages = {
                 <div style="margin-top:var(--space-lg); padding:var(--space-md); background:var(--bg-tertiary); border:1px solid var(--border-color)">
                     <div style="font-family:var(--font-condensed); font-size:0.75rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:1px; margin-bottom:var(--space-sm)">Regional Influence</div>
                     <div class="progress-bar-container">
-                        <div class="progress-bar-fill" style="width:${Math.min(100, (n.score / 1000) * 100)}%; background:var(--accent)"></div>
+                        <div class="progress-bar-fill" style="width:${Math.min(100, (n.score / 100000) * 100)}%; background:var(--accent)"></div>
                     </div>
                     <div style="display:flex; justify-content:space-between; margin-top:4px; font-family:var(--font-condensed); font-size:0.7rem; color:var(--accent)">
                         <span>GLOBAL SCORE</span>
