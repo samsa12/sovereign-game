@@ -190,7 +190,7 @@ const handleCommand = (line) => {
         case 'stats':
             const mem = process.memoryUsage();
             const formatBytes = (bytes) => {
-                if (bytes === 0) return '0 B';
+                if (bytes < 1024) return bytes + ' B';
                 const k = 1024;
                 const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
                 const i = Math.floor(Math.log(bytes) / Math.log(k));
@@ -207,17 +207,19 @@ const handleCommand = (line) => {
             break;
         case 'live':
         case 'monitor':
-            console.log('\n[!] Entering Live Monitor (Press Ctrl+C to stop monitor, or typed command to exit)');
+            console.log('\n[!] Entering Live Monitor (Press ENTER to exit)');
             const monitorInterval = setInterval(() => {
                 const rx = formatBytes(global.networkUsage.received);
                 const tx = formatBytes(global.networkUsage.sent);
                 const total = formatBytes(global.networkUsage.received + global.networkUsage.sent);
                 const players = global.wss ? global.wss.clients.size : 0;
                 process.stdout.write(`\r[LIVE] RX: ${rx} | TX: ${tx} | Total: ${total} | Online: ${players}      `);
-            }, 1000);
+            }, 500);
 
-            // To exit live mode, user just has to type anything or wait
-            rl.once('line', () => clearInterval(monitorInterval));
+            rl.once('line', () => {
+                clearInterval(monitorInterval);
+                console.log('\n[!] Live monitor stopped.');
+            });
             break;
         case 'clear':
             process.stdout.write('\x1Bc'); // Better clear

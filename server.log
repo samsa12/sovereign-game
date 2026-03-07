@@ -346,3 +346,63 @@ TypeError: Cannot read properties of undefined (reading 'prepare')
     at Module._load (node:internal/modules/cjs/loader:1327:12)
     at TracingChannel.traceSync (node:diagnostics_channel:328:14)
     at wrapModuleLoad (node:internal/modules/cjs/loader:245:24)
+[UNCAUGHT] 2026-03-07T12:10:59.815Z: ReferenceError: Cannot access 'formatBytes' before initialization
+    at Timeout._onTimeout (E:\web politics game\server.js:212:28)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7)
+[UNCAUGHT] 2026-03-07T12:11:00.826Z: ReferenceError: Cannot access 'formatBytes' before initialization
+    at Timeout._onTimeout (E:\web politics game\server.js:212:28)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7)
+[UNCAUGHT] 2026-03-07T12:11:01.845Z: ReferenceError: Cannot access 'formatBytes' before initialization
+    at Timeout._onTimeout (E:\web politics game\server.js:212:28)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7)
+[UNCAUGHT] 2026-03-07T12:11:02.858Z: ReferenceError: Cannot access 'formatBytes' before initialization
+    at Timeout._onTimeout (E:\web politics game\server.js:212:28)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7)
+[UNCAUGHT] 2026-03-07T12:11:03.874Z: ReferenceError: Cannot access 'formatBytes' before initialization
+    at Timeout._onTimeout (E:\web politics game\server.js:212:28)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7)
+[UNCAUGHT] 2026-03-07T12:11:04.882Z: ReferenceError: Cannot access 'formatBytes' before initialization
+    at Timeout._onTimeout (E:\web politics game\server.js:212:28)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7)
+[UNCAUGHT] 2026-03-07T12:11:05.887Z: ReferenceError: Cannot access 'formatBytes' before initialization
+    at Timeout._onTimeout (E:\web politics game\server.js:212:28)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7)
+[UNCAUGHT] 2026-03-07T12:11:06.895Z: ReferenceError: Cannot access 'formatBytes' before initialization
+    at Timeout._onTimeout (E:\web politics game\server.js:212:28)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7)
+[UNCAUGHT] 2026-03-07T12:11:07.910Z: ReferenceError: Cannot access 'formatBytes' before initialization
+    at Timeout._onTimeout (E:\web politics game\server.js:212:28)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7)
+[UNCAUGHT] 2026-03-07T12:11:08.924Z: ReferenceError: Cannot access 'formatBytes' before initialization
+    at Timeout._onTimeout (E:\web politics game\server.js:212:28)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7)
+[UNCAUGHT] 2026-03-07T12:11:09.939Z: ReferenceError: Cannot access 'formatBytes' before initialization
+    at Timeout._onTimeout (E:\web politics game\server.js:212:28)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7)
+[UNCAUGHT] 2026-03-07T12:11:10.941Z: ReferenceError: Cannot access 'formatBytes' before initialization
+    at Timeout._onTimeout (E:\web politics game\server.js:212:28)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7)
+[UNCAUGHT] 2026-03-07T12:11:11.944Z: ReferenceError: Cannot access 'formatBytes' before initialization
+    at Timeout._onTimeout (E:\web politics game\server.js:212:28)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7)
+[UNCAUGHT] 2026-03-07T12:11:12.949Z: ReferenceError: Cannot access 'formatBytes' before initialization
+    at Timeout._onTimeout (E:\web politics game\server.js:212:28)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7)
+[UNCAUGHT] 2026-03-07T12:11:23.850Z: ReferenceError: Cannot access 'formatBytes' before initialization
+    at Timeout._onTimeout (E:\web politics game\server.js:212:28)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7)
