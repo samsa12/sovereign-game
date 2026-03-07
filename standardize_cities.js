@@ -8,7 +8,7 @@ console.log('Standardizing all cities to 100 Infrastructure and 100 Land Area...
 try {
     const result = db.prepare(`
         UPDATE cities 
-        SET infrastructure = 100, land = 100
+        SET infrastructure = 200, land = 200
     `).run();
 
     console.log(`Successfully updated ${result.changes} cities.`);
