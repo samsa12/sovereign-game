@@ -189,7 +189,7 @@ const GAME_DATA = {
         minTaxRate: 0.0,
         maxCities: 999,
         newCityBaseCost: 100000,             // linear: baseCost * (cityCount + 1)
-        cityInfrastructureCostPer: 200,     // scales with current infra level
+        cityInfrastructureCostPer: 400,     // scales with current infra level
         powerUsagePerInfra: 15,             // MW used per unit of infrastructure
         popCapPerInfra: 500,                // population capacity per unit of infrastructure
         popCapPerLand: 25,                  // population capacity per unit of land

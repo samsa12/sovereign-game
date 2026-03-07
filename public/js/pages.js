@@ -416,10 +416,10 @@ const Pages = {
     <!-- Buy infra / land -->
     <div class="grid-2" style="margin-top:var(--space-md)">
         <button class="btn btn-secondary" style="width:100%" onclick="Pages._buyInfra(${city.id})">
-            <i class="fa-solid fa-arrow-up"></i> BUY INFRASTRUCTURE ($${UI.fmt((city.infrastructure + 1) * 200)})
+            <i class="fa-solid fa-arrow-up"></i> BUY INFRASTRUCTURE ($${UI.fmt((city.infrastructure + 1) * 400)})
         </button>
         <button class="btn btn-secondary" style="width:100%" onclick="Pages._buyLand(${city.id})">
-            <i class="fa-solid fa-expand"></i> BUY LAND ($${UI.fmt((city.land + 1) * 400)})
+            <i class="fa-solid fa-expand"></i> BUY LAND ($${UI.fmt((city.land + 1) * 250)})
         </button>
     </div>`;
     },

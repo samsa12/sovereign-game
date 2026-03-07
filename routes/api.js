@@ -446,8 +446,8 @@ router.post('/city/:cityId/land', (req, res) => {
         const city = db.prepare('SELECT * FROM cities WHERE id = ? AND nation_id = ?').get(req.params.cityId, nation.id);
         if (!city) return res.status(404).json({ error: 'City not found or does not belong to your nation.' });
 
-        // Base Land cost $500 per unit, scales slightly with current land size
-        const baseCost = amount * 500;
+        // Base Land cost $250 per unit, scales slightly with current land size
+        const baseCost = amount * 250;
         const cost = Math.floor(baseCost * (1 + city.land / 1000));
 
         if (nation.money < cost) {
