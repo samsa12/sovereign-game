@@ -297,12 +297,13 @@ const Pages = {
 
         // Power calculation
         let totalPowerProduced = 0;
-        let totalPowerUsed = 0;
+        let totalPowerUsed = (city.infrastructure || 0) * (b.powerUsagePerInfra || 15);
+
         Object.entries(imps).forEach(([type, qty]) => {
             const impDef = DATA.improvements[type];
             if (impDef) {
                 if (impDef.power) totalPowerProduced += (impDef.power * qty);
-                if (impDef.powerUsage) totalPowerUsed += (impDef.powerUsage * qty);
+                if (impDef.powerUsage) totalPowerUsed += (impDef.powerUsage * qty * 1.5); // 50% more hungry buildings
             }
         });
 

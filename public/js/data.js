@@ -584,6 +584,7 @@ const DATA = {
         baseApproval: 60,
         newCityCost: 100000,
         cityInfrastructureCostPer: 100,
+        powerUsagePerInfra: 15,
         popCapPerInfra: 500,
         popCapPerLand: 25,
         popCapImpPenalty: 100,
