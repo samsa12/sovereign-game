@@ -11,6 +11,7 @@ const API = window.API = {
     headers() {
         const h = { 'Content-Type': 'application/json' };
         if (this.token) h['Authorization'] = 'Bearer ' + this.token;
+        h['ngrok-skip-browser-warning'] = '69420'; // Skip ngrok browser warning page
         return h;
     },
 
