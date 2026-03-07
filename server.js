@@ -12,6 +12,7 @@ const http = require('http');
 const Database = require('better-sqlite3');
 const fs = require('fs');
 const nodemailer = require('nodemailer');
+const compression = require('compression');
 const { GAME_DATA } = require('./game/data');
 
 // Create Express app
@@ -96,6 +97,7 @@ global.getSmtpFrom = () => {
 app.use(helmet({
     contentSecurityPolicy: false // disabled so inline scripts in game pages still work
 }));
+app.use(compression());
 app.use(cors({
     origin: function (origin, callback) {
         callback(null, origin || '*');
