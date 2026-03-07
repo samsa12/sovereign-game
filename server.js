@@ -171,11 +171,12 @@ const handleCommand = (line) => {
     switch (cmd) {
         case 'help':
             console.log('\n--- Available Commands ---');
-            console.log('  help   - Show this help menu');
-            console.log('  tick   - Manually trigger a world tick');
-            console.log('  stats  - Show server stats');
-            console.log('  clear  - Clear terminal screen');
-            console.log('  exit   - Stop the server');
+            console.log('  help    - Show this help menu');
+            console.log('  tick    - Manually trigger a world tick');
+            console.log('  stats   - Show server stats');
+            console.log('  live    - Enter live monitoring mode');
+            console.log('  clear   - Clear terminal screen');
+            console.log('  exit    - Stop the server');
             console.log('---------------------------\n');
             break;
         case 'tick':
@@ -201,7 +202,22 @@ const handleCommand = (line) => {
             console.log(`  Memory:   ${Math.floor(mem.rss / 1024 / 1024)}MB RSS`);
             console.log(`  Players:  ${global.wss ? global.wss.clients.size : 0} online`);
             console.log(`  Network:  Incoming: ${formatBytes(global.networkUsage.received)} | Outgoing: ${formatBytes(global.networkUsage.sent)}`);
+            console.log(`  Total:    ${formatBytes(global.networkUsage.received + global.networkUsage.sent)}`);
             console.log('--------------------\n');
+            break;
+        case 'live':
+        case 'monitor':
+            console.log('\n[!] Entering Live Monitor (Press Ctrl+C to stop monitor, or typed command to exit)');
+            const monitorInterval = setInterval(() => {
+                const rx = formatBytes(global.networkUsage.received);
+                const tx = formatBytes(global.networkUsage.sent);
+                const total = formatBytes(global.networkUsage.received + global.networkUsage.sent);
+                const players = global.wss ? global.wss.clients.size : 0;
+                process.stdout.write(`\r[LIVE] RX: ${rx} | TX: ${tx} | Total: ${total} | Online: ${players}      `);
+            }, 1000);
+
+            // To exit live mode, user just has to type anything or wait
+            rl.once('line', () => clearInterval(monitorInterval));
             break;
         case 'clear':
             process.stdout.write('\x1Bc'); // Better clear
