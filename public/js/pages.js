@@ -292,7 +292,7 @@ const Pages = {
 
         // Smart City Mechanics: Population cap is based on BOTH infrastructure and land
         const b = DATA.balance;
-        const maxImps = Math.min(city.land || 100, city.infrastructure || 1);
+        const maxImps = Math.min(city.land || 100, city.infrastructure || 1, 40);
         const maxPop = Math.max(100, (city.infrastructure * b.popCapPerInfra) + (city.land * b.popCapPerLand) - (currentImps * b.popCapImpPenalty));
 
         return `
@@ -312,7 +312,7 @@ const Pages = {
         <div class="stat-card">
             <div class="stat-label"><i class="fa-solid fa-hammer"></i> Improvements</div>
             <div class="stat-value"><span style="color:${currentImps >= maxImps ? 'var(--danger)' : 'inherit'}">${currentImps}</span><span style="color:var(--text-muted)"> / ${maxImps}</span></div>
-            <div style="font-size:0.75rem;color:var(--text-muted);margin-top:4px">Bottleneck: ${city.land <= (city.infrastructure || 1) ? 'LAND' : 'INFRA'}</div>
+            <div style="font-size:0.75rem;color:var(--text-muted);margin-top:4px">Bottleneck: ${maxImps === 40 && city.land > 40 && city.infrastructure > 40 ? 'MAX' : (city.land <= (city.infrastructure || 1) ? 'LAND' : 'INFRA')}</div>
         </div>
         <div class="stat-card">
             <div class="stat-label"><i class="fa-solid fa-map"></i> Terrain</div>

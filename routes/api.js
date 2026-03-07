@@ -341,8 +341,11 @@ router.post('/city/:cityId/improve', (req, res) => {
 
         // Smart City Limit Check (1 improvement requires 1 Land AND 1 Infra)
         const totalBuildings = db.prepare('SELECT SUM(quantity) as count FROM city_improvements WHERE city_id = ?').get(city.id).count || 0;
-        const maxImps = Math.min(city.land || 100, city.infrastructure || 1);
+        const maxImps = Math.min(city.land || 100, city.infrastructure || 1, 40);
         if (totalBuildings >= maxImps) {
+            if (maxImps === 40 && city.land > 40 && city.infrastructure > 40) {
+                return res.status(400).json({ error: `City has reached the maximum improvement limit (40/40).` });
+            }
             if (city.land <= city.infrastructure) {
                 return res.status(400).json({ error: `Not enough land (${totalBuildings}/${maxImps}). Buy more land.` });
             } else {
