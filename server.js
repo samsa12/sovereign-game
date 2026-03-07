@@ -136,8 +136,8 @@ app.use((req, res, next) => {
 
 // Serve static files with long-term caching (7 days)
 app.use(express.static(path.join(__dirname, 'public'), {
-    maxAge: '7d',
-    immutable: true
+    maxAge: '1h', // Reduced to 1 hour for better balance
+    etag: true
 }));
 
 // ─── Routes ───
