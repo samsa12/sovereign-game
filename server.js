@@ -200,11 +200,11 @@ const handleCommand = (line) => {
             console.log(`  Uptime:   ${Math.floor(process.uptime())}s`);
             console.log(`  Memory:   ${Math.floor(mem.rss / 1024 / 1024)}MB RSS`);
             console.log(`  Players:  ${global.wss ? global.wss.clients.size : 0} online`);
-            console.log(`  Network:  ⬇️ ${formatBytes(global.networkUsage.received)} | ⬆️ ${formatBytes(global.networkUsage.sent)}`);
+            console.log(`  Network:  Incoming: ${formatBytes(global.networkUsage.received)} | Outgoing: ${formatBytes(global.networkUsage.sent)}`);
             console.log('--------------------\n');
             break;
         case 'clear':
-            console.clear();
+            process.stdout.write('\x1Bc'); // Better clear
             break;
         case 'exit':
         case 'stop':
@@ -249,12 +249,29 @@ if (lastTick && lastTick.value === '0') {
     db.prepare('UPDATE game_state SET value = ? WHERE key = ?').run(String(Date.now()), 'last_tick');
 }
 
+// ─── Live Title Monitor ───
+const formatBytesSimple = (bytes) => {
+    if (bytes === 0) return '0B';
+    const k = 1024;
+    const sizes = ['B', 'K', 'M', 'G'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + sizes[i];
+};
+
+setInterval(() => {
+    const rx = formatBytesSimple(global.networkUsage.received);
+    const tx = formatBytesSimple(global.networkUsage.sent);
+    const players = global.wss ? global.wss.clients.size : 0;
+    // Set CMD window title live
+    process.stdout.write(`\x1b]0;SOVEREIGN | RX: ${rx} | TX: ${tx} | Online: ${players}\x07`);
+}, 2000);
+
 // ─── Start Server ───
 server.listen(PORT, () => {
-    console.log(`\n  🌐 SOVEREIGN Server running at http://localhost:${PORT}\n`);
-    console.log(`  📊 Database: ${dbPath}`);
-    console.log(`  ⏱️  Tick interval: ${TICK_INTERVAL_MS / 1000 / 60} minutes`);
-    console.log(`  🔌 WebSocket: ws://localhost:${PORT}\n`);
+    console.log(`\n  [*] SOVEREIGN Server running at http://localhost:${PORT}\n`);
+    console.log(`  [D] Database: ${dbPath}`);
+    console.log(`  [T] Tick interval: ${TICK_INTERVAL_MS / 1000 / 60} minutes`);
+    console.log(`  [W] WebSocket: ws://localhost:${PORT}\n`);
 });
 
 // Error logging to file

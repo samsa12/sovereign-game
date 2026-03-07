@@ -10,14 +10,14 @@ cd /d "%~dp0"
 :START
 cls
 echo ===========================================
-echo    🚀 SOVEREIGN — INTERACTIVE SERVER 🚀
+echo      SOVEREIGN - INTERACTIVE SERVER
 echo ===========================================
 echo.
-echo [ℹ️] COMMANDS ARE NOW ENABLED! 
-echo      You can now type: help, tick, stats, or exit.
+echo [i] COMMANDS ARE NOW ENABLED! 
+echo     You can now type: help, tick, stats, or exit.
 echo.
-echo [⚠️] IMPORTANT: If "Select" appears in the title bar,
-echo      the server is PAUSED. Press ENTER to resume.
+echo [!] IMPORTANT: If "Select" appears in the title bar,
+echo     the server is PAUSED. Press ENTER to resume.
 echo.
 echo -------------------------------------------
 echo.
