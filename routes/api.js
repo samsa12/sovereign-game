@@ -304,7 +304,7 @@ router.post('/city/build', (req, res) => {
         if (cityCount >= GAME_DATA.balance.maxCities) return res.status(400).json({ error: 'Max cities reached.' });
 
         // Escalating cost
-        const cost = GAME_DATA.balance.newCityBaseCost * Math.pow(2, cityCount - 1);
+        const cost = (cityCount + 1) * GAME_DATA.balance.newCityBaseCost;
         if (nation.money < cost) return res.status(400).json({ error: `Not enough money. Cost: $${Math.floor(cost).toLocaleString()}` });
 
         db.prepare('UPDATE nations SET money = money - ? WHERE id = ?').run(cost, nation.id);

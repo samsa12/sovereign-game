@@ -247,7 +247,7 @@ const Pages = {
         if (!s || !s.nation) return;
         const n = s.nation;
         const cities = s.cities || [];
-        const cityCost = (cities.length + 1) * 50000;
+        const cityCost = (cities.length + 1) * DATA.balance.newCityCost;
 
         // Select first city if none selected
         if (!_selectedCityId && cities.length > 0) _selectedCityId = cities[0].id;

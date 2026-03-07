@@ -582,7 +582,7 @@ const DATA = {
         minTaxRate: 0.0,
         popGrowthRate: 0.02,
         baseApproval: 60,
-        newCityCost: 75000,
+        newCityCost: 100000,
         cityInfrastructureCostPer: 100,
         popCapPerInfra: 500,
         popCapPerLand: 25,
