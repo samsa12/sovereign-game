@@ -314,9 +314,6 @@ const Pages = {
             <div class="stat-value"><span style="color:${currentImps >= maxImps ? 'var(--danger)' : 'inherit'}">${currentImps}</span><span style="color:var(--text-muted)"> / ${maxImps}</span></div>
             <div style="font-size:0.75rem;color:var(--text-muted);margin-top:4px">Bottleneck: ${city.land <= (city.infrastructure || 1) ? 'LAND' : 'INFRA'}</div>
         </div>
-            <div class="stat-label"><i class="fa-solid fa-expand"></i> Land</div>
-            <div class="stat-value">${city.land}</div>
-        </div>
         <div class="stat-card">
             <div class="stat-label"><i class="fa-solid fa-map"></i> Terrain</div>
             <div class="stat-value" style="font-size:1rem;text-transform:uppercase">${city.terrain || '?'}</div>

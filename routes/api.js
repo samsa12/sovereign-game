@@ -312,7 +312,7 @@ router.post('/city/build', (req, res) => {
         const terrains = ['plains', 'mountain', 'forest', 'desert', 'coastal', 'urban'];
         const terrain = terrains[Math.floor(Math.random() * terrains.length)];
         const safeName = sanitize(cityName) || 'New City';
-        const result = db.prepare('INSERT INTO cities (nation_id, name, terrain, population, infrastructure, land, happiness, crime, disease, pollution) VALUES (?, ?, ?, 10000, 20, 100, 50, 0, 0, 0)')
+        const result = db.prepare('INSERT INTO cities (nation_id, name, terrain, population, infrastructure, land, happiness, crime, disease, pollution) VALUES (?, ?, ?, 10000, 100, 100, 50, 0, 0, 0)')
             .run(nation.id, safeName, terrain);
 
         const cityId = result.lastInsertRowid;
