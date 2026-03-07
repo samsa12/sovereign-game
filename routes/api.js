@@ -354,7 +354,6 @@ router.post('/city/:cityId/improve', (req, res) => {
 
         const current = db.prepare('SELECT quantity FROM city_improvements WHERE city_id = ? AND improvement_type = ?').get(city.id, improvementType);
         let maxAllowed = imp.maxPerCity;
-        if (improvementType === 'wind_farm') maxAllowed = Math.floor(city.land / 50);
 
         if (current && current.quantity >= (maxAllowed || 999)) return res.status(400).json({ error: `Max reached for this improvement (${maxAllowed}).` });
 

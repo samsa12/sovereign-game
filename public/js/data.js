@@ -151,38 +151,38 @@ const DATA = {
         coal_plant: { name: 'Coal Power Plant', category: 'power', icon: '🏭', cost: 5000, power: 1200, pollution: 20, maxPerCity: 5, desc: 'Generates power from coal. Causes pollution.' },
         oil_plant: { name: 'Oil Power Plant', category: 'power', icon: '⚡', cost: 7000, power: 2000, pollution: 15, maxPerCity: 3, desc: 'Efficient power from oil refining.' },
         nuclear_plant: { name: 'Nuclear Power Plant', category: 'power', icon: '☢️', cost: 30000, power: 8000, pollution: 0, maxPerCity: 1, requires: 'uranium', desc: 'Clean enormous energy. Requires uranium.' },
-        wind_farm: { name: 'Wind Farm', category: 'power', icon: '💨', cost: 8000, power: 600, pollution: 0, maxPerCity: 4, desc: 'Clean but moderate power output.' },
+        wind_farm: { name: 'Wind Farm', category: 'power', icon: '💨', cost: 8000, power: 600, pollution: 0, maxPerCity: 50, desc: 'Clean but moderate power output.' },
 
         // Resource Production
-        farm: { name: 'Farm', category: 'resource', icon: '🌾', cost: 1500, produces: 'food', rate: 50, maxPerCity: 10, desc: 'Produces food to feed your population.' },
-        iron_mine: { name: 'Iron Mine', category: 'resource', icon: '⛏️', cost: 3000, produces: 'steel', rate: 20, maxPerCity: 5, desc: 'Extracts iron ore for steel production.' },
-        oil_well: { name: 'Oil Well', category: 'resource', icon: '🛢️', cost: 4000, produces: 'oil', rate: 15, maxPerCity: 4, desc: 'Extracts crude oil.' },
-        bauxite_mine: { name: 'Bauxite Mine', category: 'resource', icon: '🏔️', cost: 3500, produces: 'aluminum', rate: 15, maxPerCity: 4, desc: 'Mines bauxite for aluminum refining.' },
+        farm: { name: 'Farm', category: 'resource', icon: '🌾', cost: 1500, produces: 'food', rate: 50, maxPerCity: 5, desc: 'Produces food to feed your population.' },
+        iron_mine: { name: 'Iron Mine', category: 'resource', icon: '⛏️', cost: 3000, produces: 'steel', rate: 20, maxPerCity: 3, desc: 'Extracts iron ore for steel production.' },
+        oil_well: { name: 'Oil Well', category: 'resource', icon: '🛢️', cost: 4000, produces: 'oil', rate: 15, maxPerCity: 3, desc: 'Extracts crude oil.' },
+        bauxite_mine: { name: 'Bauxite Mine', category: 'resource', icon: '🏔️', cost: 3500, produces: 'aluminum', rate: 15, maxPerCity: 3, desc: 'Mines bauxite for aluminum refining.' },
         lead_mine: { name: 'Lead Mine', category: 'resource', icon: '💀', cost: 2500, produces: 'munitions', rate: 18, maxPerCity: 4, desc: 'Produces lead for munitions manufacturing.' },
-        uranium_mine: { name: 'Uranium Mine', category: 'resource', icon: '☢️', cost: 12000, produces: 'uranium', rate: 3, maxPerCity: 2, desc: 'Extracts enriched uranium. Very expensive.' },
-        rare_mine: { name: 'Rare Earth Mine', category: 'resource', icon: '💎', cost: 10000, produces: 'rare', rate: 5, maxPerCity: 2, desc: 'Mines rare minerals for advanced tech.' },
+        uranium_mine: { name: 'Uranium Mine', category: 'resource', icon: '☢️', cost: 12000, produces: 'uranium', rate: 3, maxPerCity: 1, desc: 'Extracts enriched uranium. Very expensive.' },
+        rare_mine: { name: 'Rare Earth Mine', category: 'resource', icon: '💎', cost: 10000, produces: 'rare', rate: 5, maxPerCity: 1, desc: 'Mines rare minerals for advanced tech.' },
 
         // Manufacturing
-        steel_mill: { name: 'Steel Mill', category: 'manufacture', icon: '🔩', cost: 5000, produces: 'steel', rate: 15, consumes: { steel: 5 }, powerUsage: 400, maxPerCity: 3, desc: 'Refines raw iron into high-grade steel.' },
-        munitions_fac: { name: 'Munitions Factory', category: 'manufacture', icon: '💣', cost: 4500, produces: 'munitions', rate: 12, consumes: { munitions: 5 }, powerUsage: 300, maxPerCity: 3, desc: 'Manufactures ammunition and explosives.' },
-        aluminum_ref: { name: 'Aluminum Refinery', category: 'manufacture', icon: '⚙️', cost: 5500, produces: 'aluminum', rate: 10, consumes: { aluminum: 5 }, powerUsage: 500, maxPerCity: 3, desc: 'Refines bauxite into usable aluminum.' },
+        steel_mill: { name: 'Steel Mill', category: 'manufacture', icon: '🔩', cost: 5000, produces: 'steel', rate: 15, consumes: { steel: 5 }, powerUsage: 400, maxPerCity: 2, desc: 'Refines raw iron into high-grade steel.' },
+        munitions_fac: { name: 'Munitions Factory', category: 'manufacture', icon: '💣', cost: 12000, produces: 'munitions', rate: 20, consumes: { steel: 10, oil: 5 }, powerUsage: 800, maxPerCity: 2, desc: 'Manufactures ammunition and explosives.' },
+        aluminum_ref: { name: 'Aluminum Refinery', category: 'manufacture', icon: '⚙️', cost: 5500, produces: 'aluminum', rate: 10, consumes: { aluminum: 5 }, powerUsage: 500, maxPerCity: 2, desc: 'Refines bauxite into usable aluminum.' },
 
         // Commerce
-        bank: { name: 'Bank', category: 'commerce', icon: '🏦', cost: 6000, income: 500, maxPerCity: 5, desc: 'Generates steady income through financial services.' },
-        supermarket: { name: 'Supermarket', category: 'commerce', icon: '🏪', cost: 2000, income: 150, maxPerCity: 6, desc: 'Retail commerce that boosts GDP.' },
-        mall: { name: 'Shopping Mall', category: 'commerce', icon: '🏬', cost: 8000, income: 800, powerUsage: 200, maxPerCity: 3, desc: 'Large commercial center with high revenue.' },
+        bank: { name: 'Bank', category: 'commerce', icon: '🏦', cost: 6000, income: 500, maxPerCity: 3, desc: 'Generates steady income through financial services.' },
+        supermarket: { name: 'Supermarket', category: 'commerce', icon: '🏪', cost: 2000, income: 150, maxPerCity: 3, desc: 'Retail commerce that boosts GDP.' },
+        mall: { name: 'Shopping Mall', category: 'commerce', icon: '🏬', cost: 8000, income: 800, powerUsage: 200, maxPerCity: 2, desc: 'Large commercial center with high revenue.' },
         stadium: { name: 'Stadium', category: 'commerce', icon: '🏟️', cost: 10000, income: 600, approval: 5, powerUsage: 300, maxPerCity: 1, desc: 'Entertainment venue. Boosts income and approval.' },
 
         // Military
         barracks: { name: 'Barracks', category: 'military', icon: '🎖️', cost: 3000, enables: 'infantry', capacity: 5000, maxPerCity: 5, desc: 'Trains infantry and mechanized units.' },
         tank_factory: { name: 'Tank Factory', category: 'military', icon: '🏗️', cost: 8000, enables: 'armor', capacity: 250, maxPerCity: 3, desc: 'Produces armored vehicles and tanks.' },
-        hangar: { name: 'Air Hangar', category: 'military', icon: '✈️', cost: 10000, enables: 'air', capacity: 50, maxPerCity: 3, desc: 'Houses and maintains aircraft.' },
+        hangar: { name: 'Air Hangar', category: 'military', icon: '✈️', cost: 10000, enables: 'air', capacity: 50, maxPerCity: 2, desc: 'Houses and maintains aircraft.' },
         drydock: { name: 'Drydock', category: 'military', icon: '⚓', cost: 15000, enables: 'naval', capacity: 10, maxPerCity: 2, desc: 'Builds and repairs naval vessels.' },
         missile_pad: { name: 'Missile Launch Pad', category: 'military', icon: '🚀', cost: 25000, enables: 'missile', capacity: 5, maxPerCity: 1, desc: 'Strategic missile launch facility.' },
         nuke_facility: { name: 'Nuclear Research Lab', category: 'military', icon: '☢️', cost: 100000, enables: 'nuke', capacity: 1, maxPerCity: 1, desc: 'Develops nuclear weapons. Extremely expensive.' },
 
         // Infrastructure
-        hospital: { name: 'Hospital', category: 'civil', icon: '🏥', cost: 4000, approval: 5, powerUsage: 100, maxPerCity: 3, desc: 'Provides healthcare and boosts approval.' },
+        hospital: { name: 'Hospital', category: 'civil', icon: '🏥', cost: 4000, approval: 5, powerUsage: 100, maxPerCity: 2, desc: 'Provides healthcare and boosts approval.' },
         university: { name: 'University', category: 'civil', icon: '🎓', cost: 6000, techBonus: 5, maxPerCity: 2, desc: 'Research institution that accelerates technology.' },
         police_station: { name: 'Police Station', category: 'civil', icon: '🚔', cost: 2500, stability: 5, maxPerCity: 3, desc: 'Maintains law and order. Reduces crime.' },
         subway: { name: 'Subway System', category: 'civil', icon: '🚇', cost: 12000, approval: 8, pollution: -10, maxPerCity: 1, desc: 'Mass transit reduces pollution and boosts approval.' }
