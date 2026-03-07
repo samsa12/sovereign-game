@@ -21,7 +21,8 @@ const App = {
     async tryLoadGame() {
         try {
             // Check if user is authenticated
-            this.user = await API.getMe();
+            const res = await API.getMe();
+            this.user = res.user;
 
             // Try to load nation
             try {
